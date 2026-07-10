@@ -37,8 +37,8 @@ export default async function LoginPage({
             <Image
               src="/prosperar360-logo.png"
               alt="Prosperar 360"
-              width={102}
-              height={102}
+              width={153}
+              height={153}
               priority
             />
           </div>
