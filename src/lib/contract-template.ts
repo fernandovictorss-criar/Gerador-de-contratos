@@ -98,9 +98,9 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f2f2f3;color:#1
 .signature-role{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:#555;margin-top:6px;font-weight:700}
 .witnesses{display:grid;grid-template-columns:1fr 1fr;gap:38px;margin-top:32px}
 .small{font-size:10.5px;color:#666;text-align:center;margin-top:22px}
-@page{size:A4;margin:0}
+@page{size:A4;margin:30mm 25mm}
 @media(max-width:860px){.paper{width:100%;min-height:0;margin:0 auto}.contract{padding:24px 18px 48px}.contract h1{font-size:16px}.signature-grid,.witnesses{grid-template-columns:1fr;gap:24px}}
-@media print{.toolbar{display:none}body{background:#fff}.paper{box-shadow:none;width:210mm;min-height:297mm;margin:0;border-radius:0}.contract{padding:30mm 25mm}.signatures{break-inside:avoid;page-break-inside:avoid}.contract h3{break-after:avoid;page-break-after:avoid}}
+@media print{.toolbar{display:none}body{background:#fff}.paper{box-shadow:none;width:auto;min-height:0;margin:0;border-radius:0}.contract{padding:0}.signatures{break-inside:avoid;page-break-inside:avoid}.contract h3{break-after:avoid;page-break-after:avoid}}
 `;
 
 export function renderContratoPage(tenant: Tenant, dados: ContratoFormData): string {
