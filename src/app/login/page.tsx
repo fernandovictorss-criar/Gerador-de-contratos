@@ -32,13 +32,13 @@ export default async function LoginPage({
   const { error } = await searchParams;
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-[#E6E8EB] px-4">
+    <main className="min-h-screen flex items-center justify-center bg-brand-light px-4">
       <form
         action={authenticate}
-        className="w-full max-w-sm bg-[#0D1B2A] rounded-2xl p-8 space-y-5 shadow-xl"
+        className="w-full max-w-sm bg-brand-navy rounded-2xl p-8 space-y-5 shadow-xl"
       >
         <div className="text-center space-y-2">
-          <div className="mx-auto w-16 h-16 rounded-full bg-[#E6E8EB] flex items-center justify-center shadow-md overflow-hidden">
+          <div className="mx-auto w-16 h-16 rounded-full bg-brand-light flex items-center justify-center shadow-md overflow-hidden">
             <Image
               src="/prosperar360-logo.png"
               alt="Prosperar 360"
@@ -47,26 +47,26 @@ export default async function LoginPage({
               priority
             />
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">
-            Prosperar<span className="text-[#D4A017]">360°</span>
+          <h1 className="text-2xl font-bold tracking-tight text-brand-light">
+            Prosperar<span className="text-brand-gold">360°</span>
           </h1>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#9AA3AC]">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-brand-gray">
             Ecossistema de Soluções Empresariais
           </p>
         </div>
 
-        <p className="text-sm text-[#9AA3AC] text-center">
+        <p className="text-sm text-brand-gray text-center">
           Acesse com o e-mail e senha fornecidos pela sua conta.
         </p>
 
         {error && (
-          <p className="text-sm text-red-400 bg-red-950/50 border border-red-900 rounded-lg px-3 py-2">
+          <p className="text-sm text-brand-light bg-brand-surface border border-brand-gold/50 rounded-lg px-3 py-2">
             E-mail ou senha inválidos.
           </p>
         )}
 
         <div className="space-y-1">
-          <label htmlFor="email" className="text-xs font-semibold text-[#E6E8EB]">
+          <label htmlFor="email" className="text-xs font-semibold text-brand-light">
             E-mail
           </label>
           <input
@@ -74,12 +74,12 @@ export default async function LoginPage({
             name="email"
             type="email"
             required
-            className="w-full rounded-lg border border-[#1B365D] bg-[#1B365D]/40 px-3 py-2 text-white focus:outline-none focus:border-[#D4A017]"
+            className="w-full rounded-lg border border-brand-surface bg-brand-surface/40 px-3 py-2 text-brand-light focus:outline-none focus:border-brand-gold"
           />
         </div>
 
         <div className="space-y-1">
-          <label htmlFor="password" className="text-xs font-semibold text-[#E6E8EB]">
+          <label htmlFor="password" className="text-xs font-semibold text-brand-light">
             Senha
           </label>
           <input
@@ -87,13 +87,13 @@ export default async function LoginPage({
             name="password"
             type="password"
             required
-            className="w-full rounded-lg border border-[#1B365D] bg-[#1B365D]/40 px-3 py-2 text-white focus:outline-none focus:border-[#D4A017]"
+            className="w-full rounded-lg border border-brand-surface bg-brand-surface/40 px-3 py-2 text-brand-light focus:outline-none focus:border-brand-gold"
           />
         </div>
 
         <button
           type="submit"
-          className="w-full rounded-full bg-[#D4A017] text-[#0D1B2A] font-bold uppercase tracking-wide py-2.5 cursor-pointer hover:opacity-90 transition-opacity"
+          className="w-full rounded-full bg-brand-gold text-brand-navy font-bold uppercase tracking-wide py-2.5 cursor-pointer hover:opacity-90 transition-opacity"
         >
           Entrar
         </button>

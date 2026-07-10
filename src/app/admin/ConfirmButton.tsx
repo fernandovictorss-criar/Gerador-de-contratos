@@ -17,7 +17,7 @@ export function ConfirmButton({
           e.preventDefault();
         }
       }}
-      className={className ?? "text-xs text-brand-red hover:underline cursor-pointer"}
+      className={className ?? "text-xs text-brand-gray hover:text-brand-gold hover:underline cursor-pointer"}
     >
       {label}
     </button>

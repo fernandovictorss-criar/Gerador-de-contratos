@@ -4,12 +4,12 @@ import { AdminField } from "../AdminField";
 
 export default function NovoClientePage() {
   return (
-    <main className="min-h-screen bg-black text-white px-4 py-10">
+    <main className="min-h-screen bg-brand-navy text-brand-light px-4 py-10">
       <div className="max-w-xl mx-auto w-full">
-        <Link href="/admin" className="text-xs text-neutral-400 hover:text-white">
+        <Link href="/admin" className="text-xs text-brand-gray hover:text-brand-light">
           &larr; Voltar
         </Link>
-        <h1 className="font-display text-3xl tracking-wide leading-none mt-2 mb-6 bg-gradient-to-r from-brand-green via-brand-yellow to-brand-red bg-clip-text text-transparent">
+        <h1 className="font-bold text-3xl tracking-wide leading-none mt-2 mb-6 text-brand-light">
           Novo cliente
         </h1>
 
@@ -34,14 +34,14 @@ export default function NovoClientePage() {
           />
 
           <div className="border-t border-brand-border pt-4 space-y-4">
-            <p className="text-xs font-bold text-neutral-300">Login de acesso</p>
+            <p className="text-xs font-bold text-brand-light/80">Login de acesso</p>
             <AdminField label="E-mail" name="email" type="email" required />
             <AdminField label="Senha" name="password" type="password" required />
           </div>
 
           <button
             type="submit"
-            className="w-full rounded-full bg-gradient-to-r from-brand-green via-brand-yellow to-brand-red text-black font-bold uppercase tracking-wide py-3 cursor-pointer hover:opacity-90 transition-opacity"
+            className="w-full rounded-full bg-brand-gold text-brand-navy font-bold uppercase tracking-wide py-3 cursor-pointer hover:opacity-90 transition-opacity"
           >
             Criar cliente
           </button>

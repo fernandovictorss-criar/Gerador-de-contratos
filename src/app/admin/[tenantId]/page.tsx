@@ -19,13 +19,13 @@ export default async function EditarClientePage({
   if (!tenant) notFound();
 
   return (
-    <main className="min-h-screen bg-black text-white px-4 py-10">
+    <main className="min-h-screen bg-brand-navy text-brand-light px-4 py-10">
       <div className="max-w-xl mx-auto w-full space-y-6">
         <div>
-          <Link href="/admin" className="text-xs text-neutral-400 hover:text-white">
+          <Link href="/admin" className="text-xs text-brand-gray hover:text-brand-light">
             &larr; Voltar
           </Link>
-          <h1 className="font-display text-3xl tracking-wide leading-none mt-2 bg-gradient-to-r from-brand-green via-brand-yellow to-brand-red bg-clip-text text-transparent">
+          <h1 className="font-bold text-3xl tracking-wide leading-none mt-2 text-brand-light">
             {tenant.nome}
           </h1>
         </div>
@@ -74,19 +74,19 @@ export default async function EditarClientePage({
 
           <button
             type="submit"
-            className="w-full rounded-full bg-gradient-to-r from-brand-green via-brand-yellow to-brand-red text-black font-bold uppercase tracking-wide py-3 cursor-pointer hover:opacity-90 transition-opacity"
+            className="w-full rounded-full bg-brand-gold text-brand-navy font-bold uppercase tracking-wide py-3 cursor-pointer hover:opacity-90 transition-opacity"
           >
             Salvar alterações
           </button>
         </form>
 
         <div className="bg-brand-surface border border-brand-border rounded-2xl p-6 space-y-4">
-          <p className="text-xs font-bold text-neutral-300">Usuários de login</p>
+          <p className="text-xs font-bold text-brand-light/80">Usuários de login</p>
           <ul className="space-y-2">
             {tenant.users.map((user) => (
               <li
                 key={user.id}
-                className="flex items-center justify-between text-sm bg-black border border-brand-border rounded-lg px-3 py-2"
+                className="flex items-center justify-between text-sm bg-brand-navy border border-brand-border rounded-lg px-3 py-2"
               >
                 <span>{user.email}</span>
                 <form action={deleteUser.bind(null, user.id, tenant.id)}>
@@ -103,12 +103,12 @@ export default async function EditarClientePage({
             action={addUser.bind(null, tenant.id)}
             className="border-t border-brand-border pt-4 space-y-3"
           >
-            <p className="text-xs font-bold text-neutral-300">Adicionar novo login</p>
+            <p className="text-xs font-bold text-brand-light/80">Adicionar novo login</p>
             <AdminField label="E-mail" name="email" type="email" required />
             <AdminField label="Senha" name="password" type="password" required />
             <button
               type="submit"
-              className="w-full rounded-full bg-brand-surface border border-brand-border text-white font-bold uppercase tracking-wide text-xs py-2.5 cursor-pointer hover:border-brand-green transition-colors"
+              className="w-full rounded-full bg-brand-surface border border-brand-border text-brand-light font-bold uppercase tracking-wide text-xs py-2.5 cursor-pointer hover:border-brand-gold transition-colors"
             >
               Adicionar
             </button>
@@ -119,7 +119,7 @@ export default async function EditarClientePage({
           <ConfirmButton
             label="Excluir cliente"
             confirmMessage={`Excluir ${tenant.nome} e todos os seus logins? Essa ação não pode ser desfeita.`}
-            className="w-full rounded-full bg-transparent border border-brand-red text-brand-red font-bold uppercase tracking-wide py-3 cursor-pointer hover:bg-brand-red/10 transition-colors"
+            className="w-full rounded-full bg-transparent border border-brand-border text-brand-gray font-bold uppercase tracking-wide py-3 cursor-pointer hover:border-brand-gold hover:text-brand-light transition-colors"
           />
         </form>
       </div>

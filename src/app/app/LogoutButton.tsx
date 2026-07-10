@@ -9,7 +9,7 @@ export function LogoutButton() {
           e.preventDefault();
         }
       }}
-      className="text-xs text-neutral-400 hover:text-white underline cursor-pointer"
+      className="text-xs text-brand-gray hover:text-brand-light underline cursor-pointer"
     >
       Sair
     </button>

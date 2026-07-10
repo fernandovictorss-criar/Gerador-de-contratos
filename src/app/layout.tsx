@@ -1,12 +1,6 @@
 import type { Metadata } from "next";
-import { Bebas_Neue, Montserrat } from "next/font/google";
+import { Montserrat } from "next/font/google";
 import "./globals.css";
-
-const bebasNeue = Bebas_Neue({
-  variable: "--font-display",
-  subsets: ["latin"],
-  weight: "400",
-});
 
 const montserrat = Montserrat({
   variable: "--font-sans",
@@ -24,10 +18,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="pt-BR"
-      className={`${bebasNeue.variable} ${montserrat.variable} h-full antialiased`}
-    >
+    <html lang="pt-BR" className={`${montserrat.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );

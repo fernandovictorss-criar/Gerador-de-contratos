@@ -1,5 +1,6 @@
 import { auth, signOut } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import Image from "next/image";
 import { ContractForm } from "./ContractForm";
 import { LogoutButton } from "./LogoutButton";
 
@@ -10,14 +11,23 @@ export default async function FormPage() {
     : null;
 
   return (
-    <main className="min-h-screen bg-black text-white px-4 py-10 flex flex-col">
+    <main className="min-h-screen bg-brand-navy text-brand-light px-4 py-10 flex flex-col">
       <div className="max-w-xl mx-auto w-full flex-1">
         <div className="flex items-center justify-between mb-2">
-          <div>
-            <h1 className="font-display text-3xl tracking-wide leading-none bg-gradient-to-r from-brand-green via-brand-yellow to-brand-red bg-clip-text text-transparent">
-              Gerador de Contrato
-            </h1>
-            <p className="text-neutral-400 text-sm">{tenant?.nome}</p>
+          <div className="flex items-center gap-3">
+            <Image
+              src="/prosperar360-logo.png"
+              alt="Prosperar 360"
+              width={36}
+              height={36}
+              className="rounded-full bg-brand-light shrink-0"
+            />
+            <div>
+              <h1 className="font-bold text-2xl tracking-wide leading-none text-brand-light">
+                Gerador de Contrato
+              </h1>
+              <p className="text-brand-gray text-sm">{tenant?.nome}</p>
+            </div>
           </div>
           <form
             action={async () => {
@@ -29,21 +39,21 @@ export default async function FormPage() {
           </form>
         </div>
 
-        <p className="text-neutral-500 text-xs mb-4">
+        <p className="text-brand-gray text-xs mb-4">
           Preencha os dados abaixo para gerar o contrato pronto para assinatura. Nenhum dado é salvo após a geração.
         </p>
 
-        <nav className="flex gap-4 text-xs text-neutral-400 overflow-x-auto pb-3 mb-2 border-b border-brand-border">
-          <a href="#sec-contratante" className="hover:text-brand-green whitespace-nowrap">
+        <nav className="flex gap-4 text-xs text-brand-gray overflow-x-auto pb-3 mb-2 border-b border-brand-border">
+          <a href="#sec-contratante" className="hover:text-brand-gold whitespace-nowrap">
             Contratante
           </a>
-          <a href="#sec-evento" className="hover:text-brand-green whitespace-nowrap">
+          <a href="#sec-evento" className="hover:text-brand-gold whitespace-nowrap">
             Evento
           </a>
-          <a href="#sec-pagamento" className="hover:text-brand-green whitespace-nowrap">
+          <a href="#sec-pagamento" className="hover:text-brand-gold whitespace-nowrap">
             Pagamento
           </a>
-          <a href="#sec-assinatura" className="hover:text-brand-green whitespace-nowrap">
+          <a href="#sec-assinatura" className="hover:text-brand-gold whitespace-nowrap">
             Assinatura
           </a>
         </nav>
@@ -99,7 +109,7 @@ export default async function FormPage() {
         </ContractForm>
       </div>
 
-      <footer className="text-center text-[10px] uppercase tracking-[0.2em] text-neutral-600 pt-10">
+      <footer className="text-center text-[10px] uppercase tracking-[0.2em] text-brand-gray pt-10">
         Prosperar 360 · Ecossistema de Soluções Empresariais
       </footer>
     </main>
@@ -117,7 +127,7 @@ function Section({
 }) {
   return (
     <div id={id} className="space-y-3 border-t border-brand-border pt-4 first:border-0 first:pt-0 scroll-mt-4">
-      <h2 className="font-display text-xl tracking-wide text-brand-green">
+      <h2 className="font-bold text-sm tracking-widest uppercase text-brand-gold">
         {title}
       </h2>
       {children}
@@ -146,9 +156,9 @@ function Field({
 }) {
   return (
     <div className="space-y-1">
-      <label htmlFor={name} className="text-xs font-bold text-neutral-300 block">
+      <label htmlFor={name} className="text-xs font-bold text-brand-light/80 block">
         {label}
-        {required && <span className="text-brand-red"> *</span>}
+        {required && <span className="text-brand-gold"> *</span>}
       </label>
       {textarea ? (
         <textarea
@@ -157,7 +167,7 @@ function Field({
           rows={rows}
           placeholder={placeholder}
           required={required}
-          className="w-full rounded-lg border border-brand-border bg-black px-3 py-2 text-white text-sm focus:outline-none focus:border-brand-green"
+          className="w-full rounded-lg border border-brand-border bg-brand-navy px-3 py-2 text-brand-light text-sm focus:outline-none focus:border-brand-gold"
         />
       ) : (
         <input
@@ -166,10 +176,10 @@ function Field({
           type={type}
           placeholder={placeholder}
           required={required}
-          className="w-full rounded-lg border border-brand-border bg-black px-3 py-2 text-white text-sm focus:outline-none focus:border-brand-green"
+          className="w-full rounded-lg border border-brand-border bg-brand-navy px-3 py-2 text-brand-light text-sm focus:outline-none focus:border-brand-gold"
         />
       )}
-      {hint && <p className="text-[10px] text-neutral-500">{hint}</p>}
+      {hint && <p className="text-[10px] text-brand-gray">{hint}</p>}
     </div>
   );
 }

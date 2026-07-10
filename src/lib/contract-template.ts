@@ -75,20 +75,20 @@ function buildMaterialList(material: string): string {
 }
 
 const STYLE = `
-:root{--bg:#07090a;--paper:#ffffff;--ink:#141414;--muted:#a1a1aa;--green:#39ff6b;--yellow:#ffc100;--red:#ff3a3a;--dark:#101214;--line:#2b2b2b;--docLine:#d8dee4;--docSoft:#f3f5f7;}
+:root{--bg:#07090a;--paper:#ffffff;--ink:#141414;--muted:#a1a1aa;--navy:#0D1B2A;--blue:#1B365D;--gold:#D4A017;--dark:#101214;--line:#2b2b2b;--docLine:#d8dee4;--docSoft:#f3f5f7;}
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f2f2f3;color:#111}
-.toolbar{position:sticky;top:0;z-index:5;padding:14px 24px;background:#101214;display:flex;justify-content:center;gap:12px}
+.toolbar{position:sticky;top:0;z-index:5;padding:14px 24px;background:var(--navy);display:flex;justify-content:center;gap:12px}
 .btn{border:0;border-radius:999px;padding:11px 18px;font-weight:800;cursor:pointer;font-size:14px;text-decoration:none;display:inline-flex;align-items:center}
-.primary{background:linear-gradient(90deg,var(--green),var(--yellow),var(--red));color:#090909}
-.secondary{background:#2b2b2b;color:#fff}
+.primary{background:var(--gold);color:var(--navy)}
+.secondary{background:var(--blue);color:#E6E8EB}
 .paper{width:794px;min-height:1123px;margin:24px auto;background:#fff;color:#111;box-shadow:0 18px 60px #0003;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.5;position:relative;overflow:hidden;border-radius:2px}
 .contract{padding:40px 76px 82px;position:relative}
 .contract h1{text-align:center;font-size:19px;line-height:1.25;margin:0 0 24px;text-transform:uppercase;letter-spacing:.055em;color:#0f1115}
-.contract h1:after{content:"";display:block;width:160px;height:3px;margin:12px auto 0;background:linear-gradient(90deg,var(--green),var(--yellow),var(--red));border-radius:999px}
-.contract h3{text-align:left;font-size:13.5px;margin:22px 0 12px;padding:8px 10px;background:#f7f8fa;border-left:4px solid var(--green);border-top:1px solid var(--docLine);border-right:1px solid var(--docLine);border-bottom:1px solid var(--docLine);border-radius:6px;color:#121212;text-transform:uppercase}
+.contract h1:after{content:"";display:block;width:160px;height:3px;margin:12px auto 0;background:var(--gold);border-radius:999px}
+.contract h3{text-align:left;font-size:13.5px;margin:22px 0 12px;padding:8px 10px;background:#f7f8fa;border-left:4px solid var(--gold);border-top:1px solid var(--docLine);border-right:1px solid var(--docLine);border-bottom:1px solid var(--docLine);border-radius:6px;color:#121212;text-transform:uppercase}
 .contract p{margin:0 0 9px;text-align:justify}
-.contract ol{margin:12px 0 18px 24px;padding-left:18px;font-weight:700;background:#fafafa;border:1px solid #e5e7eb;border-left:4px solid var(--green);border-radius:8px;padding-top:10px;padding-bottom:10px}
+.contract ol{margin:12px 0 18px 24px;padding-left:18px;font-weight:700;background:#fafafa;border:1px solid #e5e7eb;border-left:4px solid var(--gold);border-radius:8px;padding-top:10px;padding-bottom:10px}
 .contract li{margin:4px 0;padding-left:4px}
 .right{text-align:right!important;margin-top:18px!important}
 .signatures{margin-top:42px}
