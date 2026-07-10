@@ -1,15 +1,17 @@
 import { signIn } from "@/auth";
+import { prisma } from "@/lib/prisma";
 import { AuthError } from "next-auth";
 import { redirect } from "next/navigation";
 import Image from "next/image";
 
 async function authenticate(formData: FormData) {
   "use server";
+  const email = String(formData.get("email") || "").toLowerCase().trim();
   try {
     await signIn("credentials", {
       email: formData.get("email"),
       password: formData.get("password"),
-      redirectTo: "/app",
+      redirect: false,
     });
   } catch (error) {
     if (error instanceof AuthError) {
@@ -17,6 +19,9 @@ async function authenticate(formData: FormData) {
     }
     throw error;
   }
+
+  const user = await prisma.user.findUnique({ where: { email }, select: { role: true } });
+  redirect(user?.role === "ADMIN" ? "/admin" : "/app");
 }
 
 export default async function LoginPage({

@@ -1,8 +1,10 @@
 import "dotenv/config";
 import { PrismaClient } from "../src/generated/prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
 import bcrypt from "bcryptjs";
 
-const prisma = new PrismaClient();
+const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
+const prisma = new PrismaClient({ adapter });
 
 async function main() {
   const passwordHash = await bcrypt.hash("dms123456", 10);
@@ -33,6 +35,24 @@ async function main() {
       tenantId: tenant.id,
     },
   });
+
+  const adminEmail = process.env.ADMIN_EMAIL;
+  const adminPassword = process.env.ADMIN_PASSWORD;
+  if (adminEmail && adminPassword) {
+    const adminPasswordHash = await bcrypt.hash(adminPassword, 10);
+    await prisma.user.upsert({
+      where: { email: adminEmail.toLowerCase().trim() },
+      update: {},
+      create: {
+        email: adminEmail.toLowerCase().trim(),
+        passwordHash: adminPasswordHash,
+        role: "ADMIN",
+      },
+    });
+    console.log("Usuário admin:", adminEmail);
+  } else {
+    console.log("ADMIN_EMAIL/ADMIN_PASSWORD não definidos — pulando criação do admin.");
+  }
 
   console.log("Seed concluído. Tenant:", tenant.slug);
   console.log("Usuário de teste: contato@dmsiluminacao.com.br / dms123456");

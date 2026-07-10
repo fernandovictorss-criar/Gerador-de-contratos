@@ -12,6 +12,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  ADMIN
+  USER
+}
+
 model Tenant {
   id                   String   @id @default(cuid())
   slug                 String   @unique
@@ -31,7 +36,8 @@ model User {
   id           String   @id @default(cuid())
   email        String   @unique
   passwordHash String
-  tenantId     String
-  tenant       Tenant   @relation(fields: [tenantId], references: [id])
+  role         Role     @default(USER)
+  tenantId     String?
+  tenant       Tenant?  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   createdAt    DateTime @default(now())
 }
