@@ -1,9 +1,10 @@
-import { signOut } from "@/auth";
+import { auth, signOut } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { LogoutButton } from "../app/LogoutButton";
 
 export default async function AdminPage() {
+  await auth();
   const tenants = await prisma.tenant.findMany({
     include: { users: true },
     orderBy: { createdAt: "desc" },
