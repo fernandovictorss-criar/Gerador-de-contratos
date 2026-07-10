@@ -33,12 +33,12 @@ export default async function LoginPage({
         className="w-full max-w-sm bg-[#0D1B2A] rounded-2xl p-8 space-y-5 shadow-xl"
       >
         <div className="text-center space-y-2">
-          <div className="mx-auto w-16 h-16 rounded-full bg-[#E6E8EB] flex items-center justify-center p-1 shadow-md">
+          <div className="mx-auto w-16 h-16 rounded-full bg-[#E6E8EB] flex items-center justify-center shadow-md overflow-hidden">
             <Image
               src="/prosperar360-logo.png"
               alt="Prosperar 360"
-              width={56}
-              height={56}
+              width={73}
+              height={73}
               priority
             />
           </div>
