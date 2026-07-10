@@ -1,6 +1,7 @@
 import { signIn } from "@/auth";
 import { AuthError } from "next-auth";
 import { redirect } from "next/navigation";
+import Image from "next/image";
 
 async function authenticate(formData: FormData) {
   "use server";
@@ -32,8 +33,14 @@ export default async function LoginPage({
         className="w-full max-w-sm bg-[#0D1B2A] rounded-2xl p-8 space-y-5 shadow-xl"
       >
         <div className="text-center space-y-2">
-          <div className="mx-auto w-14 h-14 rounded-full border-2 border-[#D4A017] flex items-center justify-center">
-            <span className="text-[#D4A017] text-2xl leading-none">↗</span>
+          <div className="mx-auto w-16 h-16 rounded-full bg-[#E6E8EB] flex items-center justify-center p-2">
+            <Image
+              src="/prosperar360-logo.png"
+              alt="Prosperar 360"
+              width={56}
+              height={56}
+              priority
+            />
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-white">
             Prosperar<span className="text-[#D4A017]">360°</span>
