@@ -14,8 +14,8 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "DMS | Gerador de Contratos",
-  description: "Iluminação, Som e LED's — transformamos eventos em experiências inesquecíveis.",
+  title: "Prosperar 360 | Gerador de Contratos",
+  description: "Ecossistema de Soluções Empresariais.",
 };
 
 export default function RootLayout({
