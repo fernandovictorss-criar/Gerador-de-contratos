@@ -58,7 +58,14 @@ export default async function AdminPage() {
             >
               <div className="flex items-center justify-between gap-4">
                 <div>
-                  <p className="font-bold">{tenant.nome}</p>
+                  <div className="flex items-center gap-2">
+                    <p className="font-bold">{tenant.nome}</p>
+                    {tenant.bloqueado && (
+                      <span className="text-[10px] uppercase tracking-wide text-brand-gold border border-brand-gold/50 rounded-full px-2 py-0.5">
+                        Bloqueado
+                      </span>
+                    )}
+                  </div>
                   <p className="text-xs text-brand-gray">{tenant.cnpj}</p>
                   <p className="text-xs text-brand-gray">
                     {tenant.users.map((u) => u.email).join(", ") || "Sem usuário"}

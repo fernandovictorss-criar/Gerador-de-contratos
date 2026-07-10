@@ -115,6 +115,14 @@ export async function updateContractTemplate(tenantId: string, formData: FormDat
   redirect(`/admin/${tenantId}`);
 }
 
+export async function setTenantBlocked(tenantId: string, bloqueado: boolean) {
+  await requireAdmin();
+  await prisma.tenant.update({ where: { id: tenantId }, data: { bloqueado } });
+  revalidatePath("/admin");
+  revalidatePath(`/admin/${tenantId}`);
+  redirect(`/admin/${tenantId}`);
+}
+
 export async function deleteTenant(tenantId: string) {
   await requireAdmin();
   await prisma.tenant.delete({ where: { id: tenantId } });

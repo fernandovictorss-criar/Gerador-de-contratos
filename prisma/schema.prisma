@@ -29,6 +29,7 @@ model Tenant {
   logoUrl              String?
   dadosBancariosPadrao String?
   contratoModeloHtml   String?
+  bloqueado            Boolean  @default(false)
   createdAt            DateTime @default(now())
   users                User[]
 }

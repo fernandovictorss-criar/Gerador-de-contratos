@@ -33,6 +33,9 @@ export async function POST(req: NextRequest) {
   if (!tenant) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
+  if (tenant.bloqueado) {
+    return new NextResponse("Cliente bloqueado.", { status: 403 });
+  }
 
   const form = await req.formData();
   const dados = FIELDS.reduce((acc, key) => {

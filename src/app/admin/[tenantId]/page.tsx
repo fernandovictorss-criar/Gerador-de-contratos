@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { updateTenant, deleteTenant, addUser, deleteUser } from "../actions";
+import { updateTenant, deleteTenant, addUser, deleteUser, setTenantBlocked } from "../actions";
 import { AdminField } from "../AdminField";
 import { ConfirmButton } from "../ConfirmButton";
 import { ContractTemplateEditor } from "../ContractTemplateEditor";
@@ -30,6 +30,35 @@ export default async function EditarClientePage({
           <h1 className="font-bold text-3xl tracking-wide leading-none mt-2 text-brand-light">
             {tenant.nome}
           </h1>
+        </div>
+
+        <div className="bg-brand-surface border border-brand-border rounded-2xl p-6 flex items-center justify-between gap-4">
+          <div>
+            <p className="text-xs font-bold text-brand-light/80">Status do cliente</p>
+            <p className="text-sm text-brand-gray mt-1">
+              {tenant.bloqueado
+                ? "Bloqueado — o cliente não consegue mais acessar o sistema nem gerar contratos."
+                : "Ativo — o cliente tem acesso normal ao sistema."}
+            </p>
+          </div>
+          {tenant.bloqueado ? (
+            <form action={setTenantBlocked.bind(null, tenant.id, false)}>
+              <button
+                type="submit"
+                className="rounded-full bg-brand-gold text-brand-navy font-bold uppercase tracking-wide text-xs px-5 py-2.5 cursor-pointer hover:opacity-90 transition-opacity whitespace-nowrap"
+              >
+                Desbloquear
+              </button>
+            </form>
+          ) : (
+            <form action={setTenantBlocked.bind(null, tenant.id, true)}>
+              <ConfirmButton
+                label="Bloquear cliente"
+                confirmMessage={`Bloquear ${tenant.nome}? O cliente não conseguirá mais acessar o sistema até ser desbloqueado.`}
+                className="rounded-full bg-transparent border border-brand-border text-brand-light font-bold uppercase tracking-wide text-xs px-5 py-2.5 cursor-pointer hover:border-brand-gold transition-colors whitespace-nowrap"
+              />
+            </form>
+          )}
         </div>
 
         <form

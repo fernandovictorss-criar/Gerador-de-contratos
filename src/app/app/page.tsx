@@ -10,6 +10,27 @@ export default async function FormPage() {
     ? await prisma.tenant.findUnique({ where: { id: session.user.tenantId } })
     : null;
 
+  if (tenant?.bloqueado) {
+    return (
+      <main className="min-h-screen bg-brand-navy text-brand-light px-4 py-10 flex items-center justify-center">
+        <div className="max-w-sm w-full bg-brand-surface border border-brand-border rounded-2xl p-6 text-center space-y-4">
+          <p className="font-bold">Acesso bloqueado</p>
+          <p className="text-sm text-brand-gray">
+            Este cliente está bloqueado. Entre em contato com o suporte para mais informações.
+          </p>
+          <form
+            action={async () => {
+              "use server";
+              await signOut({ redirectTo: "/login" });
+            }}
+          >
+            <LogoutButton />
+          </form>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="min-h-screen bg-brand-navy text-brand-light px-4 py-10 flex flex-col">
       <div className="max-w-xl mx-auto w-full flex-1">

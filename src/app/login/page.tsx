@@ -1,4 +1,4 @@
-import { signIn } from "@/auth";
+import { signIn, signOut } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { AuthError } from "next-auth";
 import { redirect } from "next/navigation";
@@ -22,7 +22,16 @@ async function authenticate(formData: FormData) {
     throw error;
   }
 
-  const user = await prisma.user.findUnique({ where: { email }, select: { role: true } });
+  const user = await prisma.user.findUnique({
+    where: { email },
+    select: { role: true, tenant: { select: { bloqueado: true } } },
+  });
+
+  if (user?.tenant?.bloqueado) {
+    await signOut({ redirect: false });
+    redirect("/login?error=bloqueado");
+  }
+
   redirect(user?.role === "ADMIN" ? "/admin" : "/app");
 }
 
@@ -64,7 +73,9 @@ export default async function LoginPage({
 
           {error && (
             <p className="text-sm text-brand-light bg-brand-surface border border-brand-gold/50 rounded-lg px-3 py-2">
-              E-mail ou senha inválidos.
+              {error === "bloqueado"
+                ? "Cliente bloqueado. Entre em contato com o suporte."
+                : "E-mail ou senha inválidos."}
             </p>
           )}
 
