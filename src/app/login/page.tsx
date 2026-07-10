@@ -26,20 +26,28 @@ export default async function LoginPage({
   const { error } = await searchParams;
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-neutral-950 px-4">
+    <main className="min-h-screen flex items-center justify-center bg-black px-4">
       <form
         action={authenticate}
-        className="w-full max-w-sm bg-neutral-900 border border-neutral-800 rounded-2xl p-8 space-y-4"
+        className="w-full max-w-sm bg-brand-surface border border-brand-border rounded-2xl p-8 space-y-5"
       >
-        <h1 className="text-lg font-bold uppercase tracking-wide text-white">
-          Gerador de Contratos
-        </h1>
-        <p className="text-sm text-neutral-400">
+        <div className="text-center space-y-1">
+          <h1 className="font-display text-6xl tracking-wide leading-none">
+            <span className="text-brand-green">D</span>
+            <span className="text-brand-yellow">M</span>
+            <span className="text-brand-red">S</span>
+          </h1>
+          <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-neutral-400">
+            Iluminação, Som e LED&apos;s
+          </p>
+        </div>
+
+        <p className="text-sm text-neutral-400 text-center">
           Acesse com o e-mail e senha fornecidos pela sua conta.
         </p>
 
         {error && (
-          <p className="text-sm text-red-400 bg-red-950/50 border border-red-900 rounded-lg px-3 py-2">
+          <p className="text-sm text-brand-red bg-red-950/50 border border-red-900 rounded-lg px-3 py-2">
             E-mail ou senha inválidos.
           </p>
         )}
@@ -53,7 +61,7 @@ export default async function LoginPage({
             name="email"
             type="email"
             required
-            className="w-full rounded-lg border border-neutral-700 bg-neutral-950 px-3 py-2 text-white"
+            className="w-full rounded-lg border border-brand-border bg-black px-3 py-2 text-white focus:outline-none focus:border-brand-green"
           />
         </div>
 
@@ -66,13 +74,13 @@ export default async function LoginPage({
             name="password"
             type="password"
             required
-            className="w-full rounded-lg border border-neutral-700 bg-neutral-950 px-3 py-2 text-white"
+            className="w-full rounded-lg border border-brand-border bg-black px-3 py-2 text-white focus:outline-none focus:border-brand-green"
           />
         </div>
 
         <button
           type="submit"
-          className="w-full rounded-full bg-gradient-to-r from-green-400 via-yellow-400 to-red-500 text-neutral-950 font-bold py-2.5"
+          className="w-full rounded-full bg-gradient-to-r from-brand-green via-brand-yellow to-brand-red text-black font-bold uppercase tracking-wide py-2.5 cursor-pointer hover:opacity-90 transition-opacity"
         >
           Entrar
         </button>

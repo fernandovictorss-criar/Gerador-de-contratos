@@ -8,11 +8,11 @@ export default async function FormPage() {
     : null;
 
   return (
-    <main className="min-h-screen bg-neutral-950 text-white px-4 py-10">
+    <main className="min-h-screen bg-black text-white px-4 py-10">
       <div className="max-w-xl mx-auto">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-sm font-bold uppercase tracking-widest text-green-400">
+            <h1 className="font-display text-3xl tracking-wide leading-none bg-gradient-to-r from-brand-green via-brand-yellow to-brand-red bg-clip-text text-transparent">
               Gerador de Contrato
             </h1>
             <p className="text-neutral-400 text-sm">{tenant?.nome}</p>
@@ -23,7 +23,7 @@ export default async function FormPage() {
               await signOut({ redirectTo: "/login" });
             }}
           >
-            <button className="text-xs text-neutral-400 hover:text-white underline">
+            <button className="text-xs text-neutral-400 hover:text-white underline cursor-pointer">
               Sair
             </button>
           </form>
@@ -33,7 +33,7 @@ export default async function FormPage() {
           method="POST"
           action="/app/contrato"
           target="_blank"
-          className="space-y-6 bg-neutral-900 border border-neutral-800 rounded-2xl p-6"
+          className="space-y-6 bg-brand-surface border border-brand-border rounded-2xl p-6"
         >
           <Section title="Contratante">
             <Field label="Razão social / Nome" name="contratante" />
@@ -83,7 +83,7 @@ export default async function FormPage() {
 
           <button
             type="submit"
-            className="w-full rounded-full bg-gradient-to-r from-green-400 via-yellow-400 to-red-500 text-neutral-950 font-bold py-3"
+            className="w-full rounded-full bg-gradient-to-r from-brand-green via-brand-yellow to-brand-red text-black font-bold uppercase tracking-wide py-3 cursor-pointer hover:opacity-90 transition-opacity"
           >
             Gerar Contrato
           </button>
@@ -95,8 +95,8 @@ export default async function FormPage() {
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="space-y-3 border-t border-neutral-800 pt-4 first:border-0 first:pt-0">
-      <h2 className="text-xs font-bold uppercase tracking-widest text-green-400">
+    <div className="space-y-3 border-t border-brand-border pt-4 first:border-0 first:pt-0">
+      <h2 className="font-display text-xl tracking-wide text-brand-green">
         {title}
       </h2>
       {children}
@@ -130,7 +130,7 @@ function Field({
           name={name}
           rows={rows}
           placeholder={placeholder}
-          className="w-full rounded-lg border border-neutral-700 bg-neutral-950 px-3 py-2 text-white text-sm"
+          className="w-full rounded-lg border border-brand-border bg-black px-3 py-2 text-white text-sm focus:outline-none focus:border-brand-green"
         />
       ) : (
         <input
@@ -138,7 +138,7 @@ function Field({
           name={name}
           type={type}
           placeholder={placeholder}
-          className="w-full rounded-lg border border-neutral-700 bg-neutral-950 px-3 py-2 text-white text-sm"
+          className="w-full rounded-lg border border-brand-border bg-black px-3 py-2 text-white text-sm focus:outline-none focus:border-brand-green"
         />
       )}
     </div>
