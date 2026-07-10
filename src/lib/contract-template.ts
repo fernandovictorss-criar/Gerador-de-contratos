@@ -100,7 +100,7 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f2f2f3;color:#1
 .small{font-size:10.5px;color:#666;text-align:center;margin-top:22px}
 @page{size:A4;margin:0}
 @media(max-width:860px){.paper{width:100%;min-height:0;margin:0 auto}.contract{padding:24px 18px 48px}.contract h1{font-size:16px}.signature-grid,.witnesses{grid-template-columns:1fr;gap:24px}}
-@media print{.toolbar{display:none}body{background:#fff}.paper{box-shadow:none;width:210mm;min-height:297mm;margin:0;border-radius:0}.contract{padding:30mm 22mm 22mm}.signatures{break-inside:avoid;page-break-inside:avoid}.contract h3{break-after:avoid;page-break-after:avoid}}
+@media print{.toolbar{display:none}body{background:#fff}.paper{box-shadow:none;width:210mm;min-height:297mm;margin:0;border-radius:0}.contract{padding:30mm 25mm}.signatures{break-inside:avoid;page-break-inside:avoid}.contract h3{break-after:avoid;page-break-after:avoid}}
 `;
 
 export function renderContratoPage(tenant: Tenant, dados: ContratoFormData): string {
