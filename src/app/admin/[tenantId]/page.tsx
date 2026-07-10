@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { updateTenant, deleteTenant, addUser, deleteUser } from "../actions";
 import { AdminField } from "../AdminField";
 import { ConfirmButton } from "../ConfirmButton";
+import { ContractTemplateEditor } from "../ContractTemplateEditor";
+import { DEFAULT_CLAUSULAS_TEMPLATE } from "@/lib/contract-template";
 
 export default async function EditarClientePage({
   params,
@@ -79,6 +81,12 @@ export default async function EditarClientePage({
             Salvar alterações
           </button>
         </form>
+
+        <ContractTemplateEditor
+          tenantId={tenant.id}
+          initialHtml={tenant.contratoModeloHtml ?? DEFAULT_CLAUSULAS_TEMPLATE}
+          isCustom={tenant.contratoModeloHtml != null}
+        />
 
         <div className="bg-brand-surface border border-brand-border rounded-2xl p-6 space-y-4">
           <p className="text-xs font-bold text-brand-light/80">Usuários de login</p>

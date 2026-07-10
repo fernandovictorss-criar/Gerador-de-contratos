@@ -100,6 +100,21 @@ export async function updateTenant(tenantId: string, formData: FormData) {
   redirect(`/admin/${tenantId}`);
 }
 
+export async function updateContractTemplate(tenantId: string, formData: FormData) {
+  await requireAdmin();
+
+  const isDefault = String(formData.get("isDefault") || "") === "true";
+  const html = String(formData.get("html") || "").trim();
+
+  await prisma.tenant.update({
+    where: { id: tenantId },
+    data: { contratoModeloHtml: isDefault ? null : html || null },
+  });
+
+  revalidatePath(`/admin/${tenantId}`);
+  redirect(`/admin/${tenantId}`);
+}
+
 export async function deleteTenant(tenantId: string) {
   await requireAdmin();
   await prisma.tenant.delete({ where: { id: tenantId } });

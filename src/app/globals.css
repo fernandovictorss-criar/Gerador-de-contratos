@@ -28,3 +28,34 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
+
+.contract-editor-body {
+  outline: none;
+}
+
+.contract-editor-body h3 {
+  color: var(--brand-gold);
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  margin: 1rem 0 0.5rem;
+}
+
+.contract-editor-body p {
+  margin: 0.4rem 0;
+  line-height: 1.5;
+}
+
+.contract-editor-body ol,
+.contract-editor-body ul {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+  border-left: 2px solid var(--brand-gold);
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
+.contract-editor-body li {
+  margin: 0.25rem 0;
+}

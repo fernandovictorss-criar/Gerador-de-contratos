@@ -28,6 +28,7 @@ model Tenant {
   endereco             String
   logoUrl              String?
   dadosBancariosPadrao String?
+  contratoModeloHtml   String?
   createdAt            DateTime @default(now())
   users                User[]
 }
