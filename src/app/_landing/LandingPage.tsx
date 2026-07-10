@@ -3,7 +3,9 @@ import Link from "next/link";
 
 const WHATSAPP_URL =
   "https://wa.me/5579999495525?text=" +
-  encodeURIComponent("Olá, quero contratar o Contrato Express");
+  encodeURIComponent(
+    "Olá! Vi a página do Contrato Express e quero contratar. Pode me passar mais informações?"
+  );
 
 const FEATURES = [
   {
