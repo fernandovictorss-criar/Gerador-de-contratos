@@ -45,12 +45,12 @@ export default async function LoginPage({
           <h1 className="text-2xl font-bold tracking-tight text-white">
             Prosperar<span className="text-[#D4A017]">360°</span>
           </h1>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#6B7177]">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#9AA3AC]">
             Ecossistema de Soluções Empresariais
           </p>
         </div>
 
-        <p className="text-sm text-[#6B7177] text-center">
+        <p className="text-sm text-[#9AA3AC] text-center">
           Acesse com o e-mail e senha fornecidos pela sua conta.
         </p>
 

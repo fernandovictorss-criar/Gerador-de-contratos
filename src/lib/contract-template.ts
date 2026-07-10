@@ -79,8 +79,9 @@ const STYLE = `
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f2f2f3;color:#111}
 .toolbar{position:sticky;top:0;z-index:5;padding:14px 24px;background:#101214;display:flex;justify-content:center;gap:12px}
-.btn{border:0;border-radius:999px;padding:11px 18px;font-weight:800;cursor:pointer;font-size:14px}
+.btn{border:0;border-radius:999px;padding:11px 18px;font-weight:800;cursor:pointer;font-size:14px;text-decoration:none;display:inline-flex;align-items:center}
 .primary{background:linear-gradient(90deg,var(--green),var(--yellow),var(--red));color:#090909}
+.secondary{background:#2b2b2b;color:#fff}
 .paper{width:794px;min-height:1123px;margin:24px auto;background:#fff;color:#111;box-shadow:0 18px 60px #0003;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.5;position:relative;overflow:hidden;border-radius:2px}
 .contract{padding:40px 76px 82px;position:relative}
 .contract h1{text-align:center;font-size:19px;line-height:1.25;margin:0 0 24px;text-transform:uppercase;letter-spacing:.055em;color:#0f1115}
@@ -167,7 +168,7 @@ export function renderContratoPage(tenant: Tenant, dados: ContratoFormData): str
 <style>${STYLE}</style>
 </head>
 <body>
-<div class="toolbar"><button class="btn primary" onclick="window.print()">Imprimir / Salvar PDF</button></div>
+<div class="toolbar"><a class="btn secondary" href="/app">&larr; Voltar ao formulário</a><button class="btn primary" onclick="window.print()">Imprimir / Salvar PDF</button></div>
 <article class="paper contract">${body}</article>
 </body>
 </html>`;
