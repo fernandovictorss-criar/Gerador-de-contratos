@@ -1,6 +1,6 @@
 import { auth, signOut } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import { GenerateButton } from "./GenerateButton";
+import { ContractForm } from "./ContractForm";
 import { LogoutButton } from "./LogoutButton";
 
 export default async function FormPage() {
@@ -48,13 +48,7 @@ export default async function FormPage() {
           </a>
         </nav>
 
-        <form
-          method="POST"
-          action="/app/contrato"
-          target="_blank"
-          rel="noopener"
-          className="space-y-6 bg-brand-surface border border-brand-border rounded-2xl p-6"
-        >
+        <ContractForm>
           <Section id="sec-contratante" title="Contratante">
             <Field label="Razão social / Nome" name="contratante" required />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -102,9 +96,7 @@ export default async function FormPage() {
               <Field label="Testemunha 2" name="testemunha2" placeholder="Nome e CPF" />
             </div>
           </Section>
-
-          <GenerateButton />
-        </form>
+        </ContractForm>
       </div>
 
       <footer className="text-center text-[10px] uppercase tracking-[0.2em] text-neutral-600 pt-10">
