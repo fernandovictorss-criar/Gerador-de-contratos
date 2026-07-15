@@ -201,13 +201,13 @@ export function renderContratoPage(tenant: Tenant, dados: ContratoFormData): str
   const body = `<h1>CONTRATO DE PRESTAÇÃO DE SERVIÇO</h1>
 <p><strong>IDENTIFICAÇÃO DAS PARTES CONTRATANTES</strong></p>
 <p><strong>CONTRATANTE:</strong> <strong>${escapeHtml(dados.contratante) || "_________________________"}</strong>, CNPJ/CPF: <strong>${escapeHtml(dados.docContratante) || "________________"}</strong>, Endereço: ${escapeHtml(dados.endContratante) || "_________________________"}, Tel: ${escapeHtml(dados.telContratante) || "____________"}.</p>
-<p><strong>CONTRATADO:</strong> <strong>${escapeHtml(tenant.nome)}</strong>, portador do CNPJ: <strong>${escapeHtml(tenant.cnpj)}</strong>, com sede na ${escapeHtml(tenant.endereco)}. As partes acima identificadas têm, entre si, justo e acertado o presente Contrato de Prestação de Serviços, que se regerá pelas cláusulas seguintes e pelas condições de preço, forma e termo de pagamento descritas no presente.</p>
+<p><strong>CONTRATADO:</strong> <strong>${escapeHtml(tenant.nome)}</strong>, portador do CNPJ: <strong>${escapeHtml(tenant.cnpj)}</strong>, com sede na ${escapeHtml(tenant.endereco)}, neste ato representada por <strong>${escapeHtml(tenant.representante)}</strong>, CPF nº <strong>${escapeHtml(tenant.cpfRepresentante)}</strong>, na qualidade de sócio-administrador/representante legal. As partes acima identificadas têm, entre si, justo e acertado o presente Contrato de Prestação de Serviços, que se regerá pelas cláusulas seguintes e pelas condições de preço, forma e termo de pagamento descritas no presente.</p>
 ${clausulasHtml}
 <p class="right"><strong>${escapeHtml(dados.cidadeAss) || "_______/__"}, ${formatLongDate(dados.dataContrato)}.</strong></p>
 <div class="signatures">
   <div class="signature-grid">
     <div class="signature-box">
-      <div class="signature-line">${escapeHtml(tenant.representante)}<br>${escapeHtml(tenant.cpfRepresentante)} ${escapeHtml(tenant.rgRepresentante)}</div>
+      <div class="signature-line">p/ ${escapeHtml(tenant.nome)}<br>${escapeHtml(tenant.representante)}<br>${escapeHtml(tenant.cpfRepresentante)} ${escapeHtml(tenant.rgRepresentante)}</div>
       <div class="signature-role">Contratado</div>
     </div>
     <div class="signature-box">
