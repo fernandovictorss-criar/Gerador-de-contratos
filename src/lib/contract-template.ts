@@ -6,12 +6,18 @@ export type ContratoFormData = {
   telContratante: string;
   endContratante: string;
   dataEvento: string;
+  horaEvento: string;
   evento: string;
   localEvento: string;
   material: string;
   quantidadeConvidados: string;
   duracaoHoras: string;
   valorTotal: string;
+  valorEntrada: string;
+  quantidadeParcelas: string;
+  valorParcela: string;
+  dataInicialParcelas: string;
+  dataFinalParcelas: string;
   formaPagamento: string;
   dadosBancarios: string;
   cidadeAss: string;
@@ -85,6 +91,11 @@ export type MergeField = {
 export const MERGE_FIELDS: MergeField[] = [
   { key: "dataEvento", label: "Data do evento", format: (d) => formatLongDate(d.dataEvento) },
   {
+    key: "horaEvento",
+    label: "Horário do evento",
+    format: (d) => escapeHtml(d.horaEvento) || "______",
+  },
+  {
     key: "localEvento",
     label: "Local do evento",
     format: (d) => escapeHtml(d.localEvento) || "________________",
@@ -102,6 +113,31 @@ export const MERGE_FIELDS: MergeField[] = [
     format: (d) => escapeHtml(d.duracaoHoras) || "______",
   },
   { key: "valorTotal", label: "Valor total", format: (d) => formatMoney(d.valorTotal) },
+  {
+    key: "valorEntrada",
+    label: "Valor de entrada",
+    format: (d) => (d.valorEntrada ? formatMoney(d.valorEntrada) : "______"),
+  },
+  {
+    key: "quantidadeParcelas",
+    label: "Quantidade de parcelas",
+    format: (d) => escapeHtml(d.quantidadeParcelas) || "______",
+  },
+  {
+    key: "valorParcela",
+    label: "Valor de cada parcela",
+    format: (d) => (d.valorParcela ? formatMoney(d.valorParcela) : "______"),
+  },
+  {
+    key: "dataInicialParcelas",
+    label: "Data da 1ª parcela",
+    format: (d) => (d.dataInicialParcelas ? formatLongDate(d.dataInicialParcelas) : "______"),
+  },
+  {
+    key: "dataFinalParcelas",
+    label: "Data da última parcela",
+    format: (d) => (d.dataFinalParcelas ? formatLongDate(d.dataFinalParcelas) : "______"),
+  },
   {
     key: "formaPagamento",
     label: "Forma de pagamento",
