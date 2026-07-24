@@ -191,9 +191,13 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f2f2f3;color:#1
 @media print{.toolbar{display:none}body{background:#fff}.paper{box-shadow:none;width:auto;min-height:0;margin:0;border-radius:0}.contract{padding:0}.signatures{break-inside:avoid;page-break-inside:avoid}.contract h3{break-after:avoid;page-break-after:avoid}}
 `;
 
-export function renderContratoPage(tenant: Tenant, dados: ContratoFormData): string {
+export function renderContratoPage(
+  tenant: Tenant,
+  dados: ContratoFormData,
+  templateHtml?: string
+): string {
   const clausulasHtml = renderClausulas(
-    tenant.contratoModeloHtml || DEFAULT_CLAUSULAS_TEMPLATE,
+    templateHtml || tenant.contratoModeloHtml || DEFAULT_CLAUSULAS_TEMPLATE,
     dados,
     tenant
   );

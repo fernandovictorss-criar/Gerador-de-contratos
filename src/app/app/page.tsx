@@ -7,7 +7,10 @@ import { LogoutButton } from "./LogoutButton";
 export default async function FormPage() {
   const session = await auth();
   const tenant = session?.user?.tenantId
-    ? await prisma.tenant.findUnique({ where: { id: session.user.tenantId } })
+    ? await prisma.tenant.findUnique({
+        where: { id: session.user.tenantId },
+        include: { modelosContrato: { orderBy: { tipoEvento: "asc" } } },
+      })
     : null;
 
   if (tenant?.bloqueado) {
@@ -90,6 +93,27 @@ export default async function FormPage() {
           </Section>
 
           <Section id="sec-evento" title="Evento e locação">
+            {tenant && tenant.modelosContrato.length > 0 && (
+              <div className="space-y-1">
+                <label htmlFor="tipoEvento" className="text-xs font-bold text-brand-light/80 block">
+                  Tipo de evento
+                  <span className="text-brand-gold"> *</span>
+                </label>
+                <select
+                  id="tipoEvento"
+                  name="tipoEvento"
+                  required
+                  className="w-full rounded-lg border border-brand-border bg-brand-navy px-3 py-2 text-brand-light text-sm focus:outline-none focus:border-brand-gold"
+                >
+                  <option value="">Selecione...</option>
+                  {tenant.modelosContrato.map((modelo) => (
+                    <option key={modelo.id} value={modelo.tipoEvento}>
+                      {modelo.tipoEvento}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <Field label="Data" name="dataEvento" type="date" required hint="Selecione no calendário" />
               <Field label="Evento" name="evento" required />

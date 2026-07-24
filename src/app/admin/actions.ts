@@ -115,6 +115,52 @@ export async function updateContractTemplate(tenantId: string, formData: FormDat
   redirect(`/admin/${tenantId}`);
 }
 
+export async function createContratoModelo(tenantId: string, formData: FormData) {
+  await requireAdmin();
+
+  const tipoEvento = String(formData.get("tipoEvento") || "").trim();
+  const html = String(formData.get("html") || "").trim();
+  if (!tipoEvento || !html) {
+    throw new Error("Preencha o tipo de evento e o modelo de contrato.");
+  }
+
+  await prisma.tenantContratoModelo.create({
+    data: { tenantId, tipoEvento, html },
+  });
+
+  revalidatePath(`/admin/${tenantId}`);
+  redirect(`/admin/${tenantId}`);
+}
+
+export async function updateContratoModelo(
+  modeloId: string,
+  tenantId: string,
+  formData: FormData
+) {
+  await requireAdmin();
+
+  const tipoEvento = String(formData.get("tipoEvento") || "").trim();
+  const html = String(formData.get("html") || "").trim();
+  if (!tipoEvento || !html) {
+    throw new Error("Preencha o tipo de evento e o modelo de contrato.");
+  }
+
+  await prisma.tenantContratoModelo.update({
+    where: { id: modeloId },
+    data: { tipoEvento, html },
+  });
+
+  revalidatePath(`/admin/${tenantId}`);
+  redirect(`/admin/${tenantId}`);
+}
+
+export async function deleteContratoModelo(modeloId: string, tenantId: string) {
+  await requireAdmin();
+  await prisma.tenantContratoModelo.delete({ where: { id: modeloId } });
+  revalidatePath(`/admin/${tenantId}`);
+  redirect(`/admin/${tenantId}`);
+}
+
 export async function setTenantBlocked(tenantId: string, bloqueado: boolean) {
   await requireAdmin();
   await prisma.tenant.update({ where: { id: tenantId }, data: { bloqueado } });

@@ -32,6 +32,18 @@ model Tenant {
   bloqueado            Boolean  @default(false)
   createdAt            DateTime @default(now())
   users                User[]
+  modelosContrato      TenantContratoModelo[]
+}
+
+model TenantContratoModelo {
+  id         String   @id @default(cuid())
+  tenantId   String
+  tenant     Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tipoEvento String
+  html       String
+  createdAt  DateTime @default(now())
+
+  @@unique([tenantId, tipoEvento])
 }
 
 model User {

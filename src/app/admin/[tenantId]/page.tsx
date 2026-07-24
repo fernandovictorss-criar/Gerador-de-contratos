@@ -1,7 +1,17 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { updateTenant, deleteTenant, addUser, deleteUser, setTenantBlocked } from "../actions";
+import {
+  updateTenant,
+  deleteTenant,
+  addUser,
+  deleteUser,
+  setTenantBlocked,
+  updateContractTemplate,
+  createContratoModelo,
+  updateContratoModelo,
+  deleteContratoModelo,
+} from "../actions";
 import { AdminField } from "../AdminField";
 import { ConfirmButton } from "../ConfirmButton";
 import { ContractTemplateEditor } from "../ContractTemplateEditor";
@@ -15,7 +25,10 @@ export default async function EditarClientePage({
   const { tenantId } = await params;
   const tenant = await prisma.tenant.findUnique({
     where: { id: tenantId },
-    include: { users: { orderBy: { createdAt: "asc" } } },
+    include: {
+      users: { orderBy: { createdAt: "asc" } },
+      modelosContrato: { orderBy: { tipoEvento: "asc" } },
+    },
   });
 
   if (!tenant) notFound();
@@ -112,10 +125,60 @@ export default async function EditarClientePage({
         </form>
 
         <ContractTemplateEditor
-          tenantId={tenant.id}
           initialHtml={tenant.contratoModeloHtml ?? DEFAULT_CLAUSULAS_TEMPLATE}
           isCustom={tenant.contratoModeloHtml != null}
+          action={updateContractTemplate.bind(null, tenant.id)}
         />
+
+        <div className="space-y-4">
+          <div>
+            <p className="text-xs font-bold text-brand-light/80">
+              Modelos por tipo de evento (opcional)
+            </p>
+            <p className="text-xs text-brand-gray mt-1">
+              Se o cliente atende mais de um tipo de evento (ex: formatura, casamento,
+              aniversário) com contratos diferentes, cadastre um modelo para cada tipo. Quando
+              houver pelo menos um modelo aqui, o cliente escolherá o tipo de evento ao gerar o
+              contrato e o modelo correspondente será usado no lugar do modelo padrão acima.
+            </p>
+          </div>
+
+          {tenant.modelosContrato.map((modelo) => (
+            <ContractTemplateEditor
+              key={modelo.id}
+              title={`Tipo de evento: ${modelo.tipoEvento}`}
+              initialHtml={modelo.html}
+              isCustom
+              action={updateContratoModelo.bind(null, modelo.id, tenant.id)}
+              fields={
+                <AdminField
+                  label="Nome do tipo de evento"
+                  name="tipoEvento"
+                  defaultValue={modelo.tipoEvento}
+                  required
+                />
+              }
+              headerActions={
+                <form action={deleteContratoModelo.bind(null, modelo.id, tenant.id)}>
+                  <ConfirmButton
+                    label="Excluir modelo"
+                    confirmMessage={`Excluir o modelo de "${modelo.tipoEvento}"?`}
+                  />
+                </form>
+              }
+            />
+          ))}
+
+          <ContractTemplateEditor
+            title="Adicionar tipo de evento"
+            initialHtml={DEFAULT_CLAUSULAS_TEMPLATE}
+            isCustom
+            action={createContratoModelo.bind(null, tenant.id)}
+            fields={
+              <AdminField label="Nome do tipo de evento" name="tipoEvento" required />
+            }
+          />
+        </div>
 
         <div className="bg-brand-surface border border-brand-border rounded-2xl p-6 space-y-4">
           <p className="text-xs font-bold text-brand-light/80">Usuários de login</p>

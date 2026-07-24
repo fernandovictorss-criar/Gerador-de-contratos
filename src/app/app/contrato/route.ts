@@ -43,7 +43,14 @@ export async function POST(req: NextRequest) {
     return acc;
   }, {} as ContratoFormData);
 
-  const html = renderContratoPage(tenant, dados);
+  const tipoEvento = String(form.get("tipoEvento") ?? "").trim();
+  const modelo = tipoEvento
+    ? await prisma.tenantContratoModelo.findUnique({
+        where: { tenantId_tipoEvento: { tenantId: tenant.id, tipoEvento } },
+      })
+    : null;
+
+  const html = renderContratoPage(tenant, dados, modelo?.html);
 
   return new NextResponse(html, {
     headers: { "Content-Type": "text/html; charset=utf-8" },

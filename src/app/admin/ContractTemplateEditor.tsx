@@ -3,7 +3,6 @@
 import { useRef, useState } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { updateContractTemplate } from "./actions";
 import { DEFAULT_CLAUSULAS_TEMPLATE, MERGE_FIELDS } from "@/lib/contract-template";
 
 function ToolbarButton({
@@ -31,13 +30,19 @@ function ToolbarButton({
 }
 
 export function ContractTemplateEditor({
-  tenantId,
+  title = "Modelo de contrato",
   initialHtml,
   isCustom,
+  action,
+  headerActions,
+  fields,
 }: {
-  tenantId: string;
+  title?: string;
   initialHtml: string;
   isCustom: boolean;
+  action: (formData: FormData) => void | Promise<void>;
+  headerActions?: React.ReactNode;
+  fields?: React.ReactNode;
 }) {
   const hiddenRef = useRef<HTMLInputElement>(null);
   const [isDefault, setIsDefault] = useState(!isCustom);
@@ -72,7 +77,10 @@ export function ContractTemplateEditor({
 
   return (
     <div className="bg-brand-surface border border-brand-border rounded-2xl p-6 space-y-4">
-      <p className="text-xs font-bold text-brand-light/80">Modelo de contrato</p>
+      <div className="flex items-center justify-between gap-4">
+        <p className="text-xs font-bold text-brand-light/80">{title}</p>
+        {headerActions}
+      </div>
 
       <div className="flex flex-wrap gap-2">
         <ToolbarButton
@@ -146,7 +154,8 @@ export function ContractTemplateEditor({
         <EditorContent editor={editor} />
       </div>
 
-      <form action={updateContractTemplate.bind(null, tenantId)}>
+      <form action={action} className="space-y-3">
+        {fields}
         <input ref={hiddenRef} type="hidden" name="html" defaultValue={initialHtml} />
         <input type="hidden" name="isDefault" value={isDefault ? "true" : "false"} />
         <button
