@@ -142,6 +142,15 @@ export const MERGE_FIELDS: MergeField[] = [
     format: (d) => (d.dataFinalParcelas ? formatLongDate(d.dataFinalParcelas) : "______"),
   },
   {
+    key: "diaVencimentoParcelas",
+    label: "Dia de vencimento das parcelas",
+    format: (d) => {
+      if (!d.dataInicialParcelas) return "______";
+      const date = new Date(`${d.dataInicialParcelas}T12:00:00`);
+      return Number.isNaN(date.getTime()) ? "______" : String(date.getDate());
+    },
+  },
+  {
     key: "formaPagamento",
     label: "Forma de pagamento",
     format: (d, t) => escapeHtml(d.formaPagamento) || escapeHtml(t.dadosBancariosPadrao ? "PIX" : ""),

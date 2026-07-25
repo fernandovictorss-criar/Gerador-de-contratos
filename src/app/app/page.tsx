@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import Image from "next/image";
 import { ContractForm } from "./ContractForm";
 import { LogoutButton } from "./LogoutButton";
+import { ParcelamentoFields } from "./ParcelamentoFields";
 
 const SERVICOS_ASSESSORIA = [
   {
@@ -156,7 +157,7 @@ export default async function FormPage() {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <Field label="Horário do evento" name="horaEvento" placeholder="21h" />
                 <Field label="Número de convidados" name="quantidadeConvidados" />
-                <Field label="Duração do evento (horas)" name="duracaoHoras" />
+                <Field label="Duração do evento (horas)" name="duracaoHoras" placeholder="Ex: 6" />
               </div>
             )}
             {tenant && tenant.modelosContrato.length > 0 ? (
@@ -206,29 +207,7 @@ export default async function FormPage() {
               <Field label="Valor total (R$)" name="valorTotal" placeholder="R$ 0,00" required />
               <Field label="Forma de pagamento" name="formaPagamento" placeholder="PIX" />
             </div>
-            {tenant && tenant.modelosContrato.length > 0 && (
-              <>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <Field label="Valor de entrada (R$)" name="valorEntrada" placeholder="R$ 0,00" />
-                  <Field label="Valor de cada parcela (R$)" name="valorParcela" placeholder="R$ 0,00" />
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <Field label="Quantidade de parcelas" name="quantidadeParcelas" />
-                  <Field
-                    label="Data da 1ª parcela"
-                    name="dataInicialParcelas"
-                    type="date"
-                    hint="Selecione no calendário"
-                  />
-                  <Field
-                    label="Data da última parcela"
-                    name="dataFinalParcelas"
-                    type="date"
-                    hint="Selecione no calendário"
-                  />
-                </div>
-              </>
-            )}
+            {tenant && tenant.modelosContrato.length > 0 && <ParcelamentoFields />}
             <Field
               label="Dados bancários (deixe em branco para usar o padrão)"
               name="dadosBancarios"
