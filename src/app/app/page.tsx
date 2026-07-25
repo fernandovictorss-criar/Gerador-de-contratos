@@ -119,6 +119,9 @@ export default async function FormPage() {
         <ContractForm>
           <Section id="sec-contratante" title="Contratante">
             <Field label="Razão social / Nome" name="contratante" required />
+            {tenant && tenant.modelosContrato.length > 0 && (
+              <Field label="Profissão" name="profissao" />
+            )}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <Field label="CNPJ / CPF" name="docContratante" required />
               <Field label="Telefone" name="telContratante" />

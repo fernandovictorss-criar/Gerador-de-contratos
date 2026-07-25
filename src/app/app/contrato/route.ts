@@ -5,6 +5,7 @@ import { renderContratoPage, type ContratoFormData } from "@/lib/contract-templa
 
 const FIELDS: (keyof ContratoFormData)[] = [
   "contratante",
+  "profissao",
   "docContratante",
   "telContratante",
   "endContratante",
@@ -58,7 +59,7 @@ export async function POST(req: NextRequest) {
       })
     : null;
 
-  const html = renderContratoPage(tenant, dados, modelo?.html);
+  const html = renderContratoPage(tenant, dados, modelo?.html, Boolean(tipoEvento));
 
   return new NextResponse(html, {
     headers: { "Content-Type": "text/html; charset=utf-8" },

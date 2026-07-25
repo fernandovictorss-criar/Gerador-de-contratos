@@ -2,6 +2,7 @@ import type { Tenant } from "@/generated/prisma/client";
 
 export type ContratoFormData = {
   contratante: string;
+  profissao: string;
   docContratante: string;
   telContratante: string;
   endContratante: string;
@@ -167,6 +168,11 @@ export const MERGE_FIELDS: MergeField[] = [
     format: (d) => escapeHtml(d.contratante) || "_________________________",
   },
   {
+    key: "profissao",
+    label: "Profissão do contratante",
+    format: (d) => escapeHtml(d.profissao),
+  },
+  {
     key: "docContratante",
     label: "CNPJ/CPF do contratante",
     format: (d) => escapeHtml(d.docContratante) || "________________",
@@ -254,7 +260,8 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f2f2f3;color:#1
 export function renderContratoPage(
   tenant: Tenant,
   dados: ContratoFormData,
-  templateHtml?: string
+  templateHtml?: string,
+  usarEstiloPessoaFisica: boolean = false
 ): string {
   const clausulasHtml = renderClausulas(
     templateHtml || tenant.contratoModeloHtml || DEFAULT_CLAUSULAS_TEMPLATE,
@@ -262,9 +269,13 @@ export function renderContratoPage(
     tenant
   );
 
+  const contratanteClause = usarEstiloPessoaFisica
+    ? `<p><strong>CONTRATANTE:</strong> <strong>${escapeHtml(dados.contratante) || "_________________________"}</strong>${dados.profissao ? `, ${escapeHtml(dados.profissao)}` : ""}, portador(a) do CPF/MF sob o nº <strong>${escapeHtml(dados.docContratante) || "________________"}</strong>, residente e domiciliado(a) no endereço ${escapeHtml(dados.endContratante) || "_________________________"}, Tel: ${escapeHtml(dados.telContratante) || "____________"}.</p>`
+    : `<p><strong>CONTRATANTE:</strong> <strong>${escapeHtml(dados.contratante) || "_________________________"}</strong>, CNPJ/CPF: <strong>${escapeHtml(dados.docContratante) || "________________"}</strong>, Endereço: ${escapeHtml(dados.endContratante) || "_________________________"}, Tel: ${escapeHtml(dados.telContratante) || "____________"}.</p>`;
+
   const body = `<h1>CONTRATO DE PRESTAÇÃO DE SERVIÇO</h1>
 <p><strong>IDENTIFICAÇÃO DAS PARTES CONTRATANTES</strong></p>
-<p><strong>CONTRATANTE:</strong> <strong>${escapeHtml(dados.contratante) || "_________________________"}</strong>, CNPJ/CPF: <strong>${escapeHtml(dados.docContratante) || "________________"}</strong>, Endereço: ${escapeHtml(dados.endContratante) || "_________________________"}, Tel: ${escapeHtml(dados.telContratante) || "____________"}.</p>
+${contratanteClause}
 <p><strong>CONTRATADO:</strong> <strong>${escapeHtml(tenant.nome)}</strong>, portador do CNPJ: <strong>${escapeHtml(tenant.cnpj)}</strong>, com sede na ${escapeHtml(tenant.endereco)}, neste ato representada por <strong>${escapeHtml(tenant.representante)}</strong>, CPF nº <strong>${escapeHtml(tenant.cpfRepresentante)}</strong>, na qualidade de sócio-administrador/representante legal. As partes acima identificadas têm, entre si, justo e acertado o presente Contrato de Prestação de Serviços, que se regerá pelas cláusulas seguintes e pelas condições de preço, forma e termo de pagamento descritas no presente.</p>
 ${clausulasHtml}
 <p class="right"><strong>${escapeHtml(dados.cidadeAss) || "_______/__"}, ${formatLongDate(dados.dataContrato)}.</strong></p>
