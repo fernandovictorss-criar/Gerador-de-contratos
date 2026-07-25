@@ -73,6 +73,9 @@ function buildMaterialList(material: string): string {
     .split("\n")
     .map((x) => x.trim())
     .filter(Boolean);
+  if (lines.length <= 1) {
+    return escapeHtml(lines[0] ?? "");
+  }
   return (
     "<ol>" +
     lines
