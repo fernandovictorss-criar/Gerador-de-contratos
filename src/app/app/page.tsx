@@ -129,7 +129,7 @@ export default async function FormPage() {
             <Field label="Endereço completo" name="endContratante" textarea required />
           </Section>
 
-          <Section id="sec-evento" title="Evento e locação">
+          <Section id="sec-evento" title="Dados do Evento">
             {tenant && tenant.modelosContrato.length > 0 && (
               <div className="space-y-1">
                 <label htmlFor="tipoEvento" className="text-xs font-bold text-brand-light/80 block">
