@@ -273,7 +273,12 @@ export function renderContratoPage(
     ? `<p><strong>CONTRATANTE:</strong> <strong>${escapeHtml(dados.contratante) || "_________________________"}</strong>${dados.profissao ? `, ${escapeHtml(dados.profissao)}` : ""}, portador(a) do CPF/MF sob o nº <strong>${escapeHtml(dados.docContratante) || "________________"}</strong>, residente e domiciliado(a) no endereço ${escapeHtml(dados.endContratante) || "_________________________"}, Tel: ${escapeHtml(dados.telContratante) || "____________"}.</p>`
     : `<p><strong>CONTRATANTE:</strong> <strong>${escapeHtml(dados.contratante) || "_________________________"}</strong>, CNPJ/CPF: <strong>${escapeHtml(dados.docContratante) || "________________"}</strong>, Endereço: ${escapeHtml(dados.endContratante) || "_________________________"}, Tel: ${escapeHtml(dados.telContratante) || "____________"}.</p>`;
 
-  const body = `<h1>CONTRATO DE PRESTAÇÃO DE SERVIÇO</h1>
+  const titulo =
+    tenant.cnpj === "57.470.862/0001-03"
+      ? "CONTRATO DE PRESTAÇÃO DE SERVIÇOS DE ASSESSORIA E CERIMONIAL"
+      : "CONTRATO DE PRESTAÇÃO DE SERVIÇO";
+
+  const body = `<h1>${titulo}</h1>
 <p><strong>IDENTIFICAÇÃO DAS PARTES CONTRATANTES</strong></p>
 ${contratanteClause}
 <p><strong>CONTRATADO:</strong> <strong>${escapeHtml(tenant.nome)}</strong>, portador do CNPJ: <strong>${escapeHtml(tenant.cnpj)}</strong>, com sede na ${escapeHtml(tenant.endereco)}, neste ato representada por <strong>${escapeHtml(tenant.representante)}</strong>, CPF nº <strong>${escapeHtml(tenant.cpfRepresentante)}</strong>, na qualidade de sócio-administrador/representante legal. As partes acima identificadas têm, entre si, justo e acertado o presente Contrato de Prestação de Serviços, que se regerá pelas cláusulas seguintes e pelas condições de preço, forma e termo de pagamento descritas no presente.</p>
