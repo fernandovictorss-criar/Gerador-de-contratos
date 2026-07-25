@@ -4,6 +4,39 @@ import Image from "next/image";
 import { ContractForm } from "./ContractForm";
 import { LogoutButton } from "./LogoutButton";
 
+const SERVICOS_ASSESSORIA = [
+  {
+    titulo: "Assessoria Coordenação On Line",
+    descricao:
+      "Planejamento com participação de Ellen Regina, onde os fornecedores são indicados virtualmente, incluindo agendamento das visitas, com o cliente realizando as visitas aos fornecedores sem acompanhamento presencial de Ellen Regina. A condução do evento fica sob responsabilidade da coordenadora da equipe.",
+  },
+  {
+    titulo: "Assessoria Coordenação Ouro",
+    descricao:
+      "Planejamento com participação de Ellen Regina e acompanhamento presencial na escolha de até três fornecedores. A condução do evento fica sob responsabilidade da coordenadora da equipe.",
+  },
+  {
+    titulo: "Assessoria Coordenação Diamante",
+    descricao:
+      "Planejamento conduzido com a participação de Ellen Regina, incluindo acompanhamento presencial na escolha de até seis fornecedores. No dia do evento, a operação é conduzida por uma coordenadora da equipe.",
+  },
+  {
+    titulo: "Assessoria Exclusividade On Line",
+    descricao:
+      "Planejamento com participação de Ellen Regina, onde os fornecedores são indicados virtualmente, incluindo agendamento das visitas, com o cliente realizando as visitas aos fornecedores sem acompanhamento presencial da Equipe de Assessoria. A condução do evento fica sob responsabilidade direta da cerimonialista Ellen Regina.",
+  },
+  {
+    titulo: "Assessoria Exclusividade Ouro",
+    descricao:
+      "Acompanhamento desde o início do planejamento até a realização do evento, com participação de Ellen Regina e acompanhamento presencial na escolha de até três fornecedores. É uma alternativa para clientes que desejam a presença de Ellen, mas possuem menor necessidade de acompanhamento presencial.",
+  },
+  {
+    titulo: "Assessoria Exclusividade Diamante",
+    descricao:
+      "Acompanhamento desde o início do planejamento até a entrega do evento, com participação direta de Ellen Regina e acompanhamento presencial na escolha de até seis fornecedores. É o serviço de maior proximidade, personalização e valor percebido.",
+  },
+];
+
 export default async function FormPage() {
   const session = await auth();
   const tenant = session?.user?.tenantId
@@ -126,13 +159,46 @@ export default async function FormPage() {
                 <Field label="Duração do evento (horas)" name="duracaoHoras" />
               </div>
             )}
-            <Field
-              label="Material contratado (uma linha por item)"
-              name="material"
-              textarea
-              rows={6}
-              required
-            />
+            {tenant && tenant.modelosContrato.length > 0 ? (
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-brand-light/80 block">
+                  Serviço de assessoria contratado
+                  <span className="text-brand-gold"> *</span>
+                </label>
+                <div className="space-y-2">
+                  {SERVICOS_ASSESSORIA.map((servico) => (
+                    <label
+                      key={servico.titulo}
+                      className="flex gap-3 rounded-lg border border-brand-border bg-brand-navy px-3 py-2.5 cursor-pointer hover:border-brand-gold transition-colors"
+                    >
+                      <input
+                        type="radio"
+                        name="material"
+                        value={`${servico.titulo} — ${servico.descricao}`}
+                        required
+                        className="mt-1 accent-brand-gold shrink-0"
+                      />
+                      <span>
+                        <span className="block text-sm font-bold text-brand-light">
+                          {servico.titulo}
+                        </span>
+                        <span className="block text-xs text-brand-gray mt-0.5">
+                          {servico.descricao}
+                        </span>
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <Field
+                label="Material contratado (uma linha por item)"
+                name="material"
+                textarea
+                rows={6}
+                required
+              />
+            )}
           </Section>
 
           <Section id="sec-pagamento" title="Pagamento">
