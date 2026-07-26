@@ -286,7 +286,7 @@ body{font-family:'Montserrat',Arial,Helvetica,sans-serif;background:#F1E6DA;colo
 .contract strong{color:#2B2B2B}
 .contract u{text-decoration-color:#C1705C}
 .signature-line{border-top:1px solid #BBA99E;font-weight:600}
-.signature-role{font-family:'Cinzel',Georgia,serif;font-weight:600;color:#C1705C;letter-spacing:.12em}
+.signature-role{font-family:'Cinzel',Georgia,serif;font-weight:600;color:#2B2B2B;letter-spacing:.12em}
 .small{color:#BBA99E;font-size:10px;letter-spacing:.02em}
 .right{color:#2B2B2B}
 @media print{body{background:#fff}}
