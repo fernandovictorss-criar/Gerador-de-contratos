@@ -279,6 +279,7 @@ body{font-family:'Montserrat',Arial,Helvetica,sans-serif;background:#F1E6DA;colo
 .primary{background:#C1705C;color:#FFF}
 .secondary{background:#BBA99E;color:#FFF}
 .paper{font-family:'Montserrat',Arial,Helvetica,sans-serif;color:#2B2B2B;box-shadow:0 18px 60px #2b2b2b26}
+.contract-logo{display:block;width:158px;height:auto;margin:0 auto 26px}
 .contract h1{font-family:'Cinzel',Georgia,serif;font-weight:600;font-size:20px;letter-spacing:.12em;color:#2B2B2B}
 .contract h1:after{width:120px;height:1.5px;background:#C1705C}
 .contract h3{font-family:'Cinzel',Georgia,serif;font-weight:600;font-size:13px;letter-spacing:.1em;background:#F1E6DA;border-color:#E5D8CD;border-left:3px solid #C1705C;border-radius:0;color:#2B2B2B;padding:9px 12px}
@@ -314,7 +315,11 @@ export function renderContratoPage(
     ? "CONTRATO DE PRESTAÇÃO DE SERVIÇOS DE ASSESSORIA E CERIMONIAL"
     : "CONTRATO DE PRESTAÇÃO DE SERVIÇO";
 
-  const body = `<h1>${titulo}</h1>
+  const logoHtml = usarMarcaEllen
+    ? `<img class="contract-logo" src="/ellen-regina-logo.png" alt="${escapeHtml(tenant.nome)}">`
+    : "";
+
+  const body = `${logoHtml}<h1>${titulo}</h1>
 <p><strong>IDENTIFICAÇÃO DAS PARTES CONTRATANTES</strong></p>
 ${contratanteClause}
 <p><strong>CONTRATADO:</strong> <strong>${escapeHtml(tenant.nome)}</strong>, portador do CNPJ: <strong>${escapeHtml(tenant.cnpj)}</strong>, com sede na ${escapeHtml(tenant.endereco)}, neste ato representada por <strong>${escapeHtml(tenant.representante)}</strong>, CPF nº <strong>${escapeHtml(tenant.cpfRepresentante)}</strong>, na qualidade de sócio-administrador/representante legal. As partes acima identificadas têm, entre si, justo e acertado o presente Contrato de Prestação de Serviços, que se regerá pelas cláusulas seguintes e pelas condições de preço, forma e termo de pagamento descritas no presente.</p>
