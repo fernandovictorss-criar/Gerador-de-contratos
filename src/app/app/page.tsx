@@ -159,14 +159,20 @@ export default async function FormPage() {
             {tenant && tenant.modelosContrato.length > 0 && (
               <>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <Field label="Horário do evento" name="horaEvento" placeholder="21h" />
-                  <Field label="Número de convidados" name="quantidadeConvidados" />
-                  <Field label="Duração do evento (horas)" name="duracaoHoras" placeholder="Ex: 6" />
+                  <Field label="Horário do evento" name="horaEvento" placeholder="21h" required />
+                  <Field label="Número de convidados" name="quantidadeConvidados" required />
+                  <Field
+                    label="Duração do evento (horas)"
+                    name="duracaoHoras"
+                    placeholder="Ex: 6"
+                    required
+                  />
                 </div>
                 <Field
                   label="Quantidade de pessoas da equipe"
                   name="quantidadeEquipe"
                   placeholder="Ex: 5"
+                  required
                 />
               </>
             )}
