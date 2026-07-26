@@ -342,7 +342,7 @@ ${clausulasHtml}
     </div>
   </div>
 </div>
-<p class="small">Documento gerado internamente. Conferir dados, valores e anexos antes da assinatura.</p>`;
+${usarMarcaEllen ? "" : `<p class="small">Documento gerado internamente. Conferir dados, valores e anexos antes da assinatura.</p>`}`;
 
   return `<!doctype html>
 <html lang="pt-BR">
