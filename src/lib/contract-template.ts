@@ -13,6 +13,7 @@ export type ContratoFormData = {
   material: string;
   quantidadeConvidados: string;
   duracaoHoras: string;
+  quantidadeEquipe: string;
   valorTotal: string;
   valorEntrada: string;
   quantidadeParcelas: string;
@@ -115,6 +116,11 @@ export const MERGE_FIELDS: MergeField[] = [
     key: "duracaoHoras",
     label: "Duração do evento (horas)",
     format: (d) => escapeHtml(d.duracaoHoras) || "______",
+  },
+  {
+    key: "quantidadeEquipe",
+    label: "Quantidade de pessoas da equipe",
+    format: (d) => escapeHtml(d.quantidadeEquipe) || "______",
   },
   { key: "valorTotal", label: "Valor total", format: (d) => formatMoney(d.valorTotal) },
   {
