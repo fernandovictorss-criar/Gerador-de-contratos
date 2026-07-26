@@ -263,6 +263,35 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f2f2f3;color:#1
 @media print{.toolbar{display:none}body{background:#fff}.paper{box-shadow:none;width:auto;min-height:0;margin:0;border-radius:0}.contract{padding:0}.signatures{break-inside:avoid;page-break-inside:avoid}.contract h3{break-after:avoid;page-break-after:avoid}}
 `;
 
+const ELLEN_CNPJ = "57.470.862/0001-03";
+
+const ELLEN_FONTS = `<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">`;
+
+/* Kit de marca Ellen Regina — Organização de Eventos.
+   Terracota é a cor principal da marca; as demais vêm da paleta oficial. */
+const ELLEN_THEME = `
+:root{--navy:#2B2B2B;--blue:#BBA99E;--gold:#C1705C;--docLine:#E5D8CD;--docSoft:#F1E6DA;}
+body{font-family:'Montserrat',Arial,Helvetica,sans-serif;background:#F1E6DA;color:#2B2B2B}
+.toolbar{background:#2B2B2B}
+.btn{font-weight:600;letter-spacing:.04em}
+.primary{background:#C1705C;color:#FFF}
+.secondary{background:#BBA99E;color:#FFF}
+.paper{font-family:'Montserrat',Arial,Helvetica,sans-serif;color:#2B2B2B;box-shadow:0 18px 60px #2b2b2b26}
+.contract h1{font-family:'Cinzel',Georgia,serif;font-weight:600;font-size:20px;letter-spacing:.12em;color:#2B2B2B}
+.contract h1:after{width:120px;height:1.5px;background:#C1705C}
+.contract h3{font-family:'Cinzel',Georgia,serif;font-weight:600;font-size:13px;letter-spacing:.1em;background:#F1E6DA;border-color:#E5D8CD;border-left:3px solid #C1705C;border-radius:0;color:#2B2B2B;padding:9px 12px}
+.contract ol,.contract ul{font-weight:500;background:#FBF6F1;border:1px solid #E5D8CD;border-left:3px solid #C1705C;border-radius:0}
+.contract strong{color:#2B2B2B}
+.contract u{text-decoration-color:#C1705C}
+.signature-line{border-top:1px solid #BBA99E;font-weight:600}
+.signature-role{font-family:'Cinzel',Georgia,serif;font-weight:600;color:#C1705C;letter-spacing:.12em}
+.small{color:#BBA99E;font-size:10px;letter-spacing:.02em}
+.right{color:#2B2B2B}
+@media print{body{background:#fff}}
+`;
+
 export function renderContratoPage(
   tenant: Tenant,
   dados: ContratoFormData,
@@ -279,10 +308,11 @@ export function renderContratoPage(
     ? `<p><strong>CONTRATANTE:</strong> <strong>${escapeHtml(dados.contratante) || "_________________________"}</strong>${dados.profissao ? `, ${escapeHtml(dados.profissao)}` : ""}, portador(a) do CPF/MF sob o nº <strong>${escapeHtml(dados.docContratante) || "________________"}</strong>, residente e domiciliado(a) no endereço ${escapeHtml(dados.endContratante) || "_________________________"}, Tel: ${escapeHtml(dados.telContratante) || "____________"}.</p>`
     : `<p><strong>CONTRATANTE:</strong> <strong>${escapeHtml(dados.contratante) || "_________________________"}</strong>, CNPJ/CPF: <strong>${escapeHtml(dados.docContratante) || "________________"}</strong>, Endereço: ${escapeHtml(dados.endContratante) || "_________________________"}, Tel: ${escapeHtml(dados.telContratante) || "____________"}.</p>`;
 
-  const titulo =
-    tenant.cnpj === "57.470.862/0001-03"
-      ? "CONTRATO DE PRESTAÇÃO DE SERVIÇOS DE ASSESSORIA E CERIMONIAL"
-      : "CONTRATO DE PRESTAÇÃO DE SERVIÇO";
+  const usarMarcaEllen = tenant.cnpj === ELLEN_CNPJ;
+
+  const titulo = usarMarcaEllen
+    ? "CONTRATO DE PRESTAÇÃO DE SERVIÇOS DE ASSESSORIA E CERIMONIAL"
+    : "CONTRATO DE PRESTAÇÃO DE SERVIÇO";
 
   const body = `<h1>${titulo}</h1>
 <p><strong>IDENTIFICAÇÃO DAS PARTES CONTRATANTES</strong></p>
@@ -320,7 +350,8 @@ ${clausulasHtml}
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Contrato | ${escapeHtml(tenant.nome)}</title>
-<style>${STYLE}</style>
+${usarMarcaEllen ? ELLEN_FONTS : ""}
+<style>${STYLE}${usarMarcaEllen ? ELLEN_THEME : ""}</style>
 </head>
 <body>
 <div class="toolbar"><a class="btn secondary" href="/app">&larr; Voltar ao formulário</a><button class="btn primary" onclick="window.print()">Imprimir / Salvar PDF</button></div>
