@@ -29,12 +29,12 @@ const SERVICOS_ASSESSORIA = [
   {
     titulo: "Assessoria Exclusividade Ouro",
     descricao:
-      "Acompanhamento desde o início do planejamento até a realização do evento, com participação de Ellen Regina e acompanhamento presencial na escolha de até três fornecedores. É uma alternativa para clientes que desejam a presença de Ellen, mas possuem menor necessidade de acompanhamento presencial.",
+      "Acompanhamento desde o início do planejamento até a realização do evento, com participação de Ellen Regina e acompanhamento presencial na escolha de até três fornecedores.",
   },
   {
     titulo: "Assessoria Exclusividade Diamante",
     descricao:
-      "Acompanhamento desde o início do planejamento até a entrega do evento, com participação direta de Ellen Regina e acompanhamento presencial na escolha de até seis fornecedores. É o serviço de maior proximidade, personalização e valor percebido.",
+      "Acompanhamento desde o início do planejamento até a entrega do evento, com participação direta de Ellen Regina e acompanhamento presencial na escolha de até seis fornecedores.",
   },
 ];
 
