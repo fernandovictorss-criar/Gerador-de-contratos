@@ -328,7 +328,7 @@ ${clausulasHtml}
 <div class="signatures">
   <div class="signature-grid">
     <div class="signature-box">
-      <div class="signature-line">p/ ${escapeHtml(tenant.nome)}<br>${escapeHtml(tenant.representante)}<br>${escapeHtml(tenant.cpfRepresentante)} ${escapeHtml(tenant.rgRepresentante)}</div>
+      <div class="signature-line">p/ ${escapeHtml(tenant.nome)}<br>${escapeHtml(tenant.representante)}<br>${escapeHtml(tenant.cpfRepresentante)}${usarMarcaEllen ? "" : ` ${escapeHtml(tenant.rgRepresentante)}`}</div>
       <div class="signature-role">Contratado</div>
     </div>
     <div class="signature-box">
