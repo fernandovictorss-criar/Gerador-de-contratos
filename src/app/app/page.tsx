@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import Image from "next/image";
 import { ContractForm } from "./ContractForm";
 import { LogoutButton } from "./LogoutButton";
+import { DataEventoField } from "./DataEventoField";
 import { DuracaoFields } from "./DuracaoFields";
 import { ParcelamentoFields } from "./ParcelamentoFields";
 
@@ -152,8 +153,12 @@ export default async function FormPage() {
                 </select>
               </div>
             )}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <Field label="Data" name="dataEvento" type="date" required hint="Selecione no calendário" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-start">
+              {tenant && tenant.modelosContrato.length > 0 ? (
+                <DataEventoField />
+              ) : (
+                <Field label="Data" name="dataEvento" type="date" required hint="Selecione no calendário" />
+              )}
               <Field label="Evento" name="evento" required />
             </div>
             <Field label="Local" name="localEvento" required />

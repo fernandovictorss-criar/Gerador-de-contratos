@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { DATA_EVENTO_CHANGED } from "./DataEventoField";
 
 function parseMoney(raw: string): number {
   const limpo = (raw || "")
@@ -46,7 +47,9 @@ export function ParcelamentoFields() {
     const valorParcelaEl = getInput("valorParcela");
     const dataInicialEl = getInput("dataInicialParcelas");
     const dataFinalEl = getInput("dataFinalParcelas");
-    const dataEventoEl = getInput("dataEvento");
+    // Consultado a cada verificação: o campo de data pode ser trocado pelo
+    // texto livre quando a data do evento está "a definir".
+    const getDataEventoEl = () => getInput("dataEvento");
 
     function recomputeParcela() {
       if (!valorParcelaEl) return;
@@ -62,7 +65,7 @@ export function ParcelamentoFields() {
     function checkPrazo() {
       if (!dataFinalEl) return;
       const dataFinal = dataFinalEl.value;
-      const dataEvento = dataEventoEl?.value || "";
+      const dataEvento = getDataEventoEl()?.value || "";
       if (dataFinal && dataEvento) {
         const dias = diffDays(dataFinal, dataEvento);
         if (dias < 15) {
@@ -91,14 +94,21 @@ export function ParcelamentoFields() {
 
     const onParcelaInputs = () => recomputeParcela();
     const onDataInputs = () => recomputeDataFinal();
-    const onEventoChange = () => checkPrazo();
+    // Delegado no formulário: o campo de data do evento pode ser
+    // remontado quando o usuário marca "Data a definir".
+    const onFormInput = (e: Event) => {
+      if ((e.target as HTMLElement | null)?.getAttribute?.("name") === "dataEvento") {
+        checkPrazo();
+      }
+    };
 
     valorTotalEl?.addEventListener("input", onParcelaInputs);
     valorEntradaEl?.addEventListener("input", onParcelaInputs);
     quantidadeParcelasEl?.addEventListener("input", onParcelaInputs);
     quantidadeParcelasEl?.addEventListener("input", onDataInputs);
     dataInicialEl?.addEventListener("input", onDataInputs);
-    dataEventoEl?.addEventListener("input", onEventoChange);
+    form.addEventListener("input", onFormInput);
+    form.addEventListener(DATA_EVENTO_CHANGED, checkPrazo);
 
     return () => {
       valorTotalEl?.removeEventListener("input", onParcelaInputs);
@@ -106,7 +116,8 @@ export function ParcelamentoFields() {
       quantidadeParcelasEl?.removeEventListener("input", onParcelaInputs);
       quantidadeParcelasEl?.removeEventListener("input", onDataInputs);
       dataInicialEl?.removeEventListener("input", onDataInputs);
-      dataEventoEl?.removeEventListener("input", onEventoChange);
+      form.removeEventListener("input", onFormInput);
+      form.removeEventListener(DATA_EVENTO_CHANGED, checkPrazo);
     };
   }, []);
 
