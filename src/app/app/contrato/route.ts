@@ -16,6 +16,8 @@ const FIELDS: (keyof ContratoFormData)[] = [
   "material",
   "quantidadeConvidados",
   "duracaoHoras",
+  "duracaoCerimonia",
+  "duracaoRecepcao",
   "quantidadeEquipe",
   "valorTotal",
   "valorEntrada",

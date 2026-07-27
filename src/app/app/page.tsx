@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import Image from "next/image";
 import { ContractForm } from "./ContractForm";
 import { LogoutButton } from "./LogoutButton";
+import { DuracaoFields } from "./DuracaoFields";
 import { ParcelamentoFields } from "./ParcelamentoFields";
 
 const SERVICOS_ASSESSORIA = [
@@ -158,16 +159,11 @@ export default async function FormPage() {
             <Field label="Local" name="localEvento" required />
             {tenant && tenant.modelosContrato.length > 0 && (
               <>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <Field label="Horário do evento" name="horaEvento" placeholder="21h" required />
                   <Field label="Número de convidados" name="quantidadeConvidados" required />
-                  <Field
-                    label="Duração do evento (horas)"
-                    name="duracaoHoras"
-                    placeholder="Ex: 6"
-                    required
-                  />
                 </div>
+                <DuracaoFields />
                 <Field
                   label="Quantidade de pessoas da equipe"
                   name="quantidadeEquipe"
