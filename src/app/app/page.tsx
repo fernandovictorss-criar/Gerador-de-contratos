@@ -154,11 +154,9 @@ export default async function FormPage() {
               </div>
             )}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-start">
-              {tenant && tenant.modelosContrato.length > 0 ? (
-                <DataEventoField />
-              ) : (
-                <Field label="Data" name="dataEvento" type="date" required hint="Selecione no calendário" />
-              )}
+              <DataEventoField
+                permitirADefinir={Boolean(tenant && tenant.modelosContrato.length > 0)}
+              />
               <Field label="Evento" name="evento" required />
             </div>
             <Field label="Local" name="localEvento" required />

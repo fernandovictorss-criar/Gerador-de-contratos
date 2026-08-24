@@ -10,6 +10,7 @@ const FIELDS: (keyof ContratoFormData)[] = [
   "telContratante",
   "endContratante",
   "dataEvento",
+  "dataEventoFim",
   "dataEventoTexto",
   "horaEvento",
   "evento",

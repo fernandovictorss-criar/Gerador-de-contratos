@@ -7,6 +7,7 @@ export type ContratoFormData = {
   telContratante: string;
   endContratante: string;
   dataEvento: string;
+  dataEventoFim: string;
   dataEventoTexto: string;
   horaEvento: string;
   evento: string;
@@ -100,7 +101,13 @@ export const MERGE_FIELDS: MergeField[] = [
   {
     key: "dataEvento",
     label: "Data do evento",
-    format: (d) => (d.dataEventoTexto ? escapeHtml(d.dataEventoTexto) : formatLongDate(d.dataEvento)),
+    format: (d) => {
+      if (d.dataEventoTexto) return escapeHtml(d.dataEventoTexto);
+      if (d.dataEventoFim) {
+        return `${formatLongDate(d.dataEvento)} a ${formatLongDate(d.dataEventoFim)}`;
+      }
+      return formatLongDate(d.dataEvento);
+    },
   },
   {
     key: "horaEvento",
