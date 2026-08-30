@@ -45,7 +45,10 @@ export default async function FormPage() {
   const tenant = session?.user?.tenantId
     ? await prisma.tenant.findUnique({
         where: { id: session.user.tenantId },
-        include: { modelosContrato: { orderBy: { tipoEvento: "asc" } } },
+        include: {
+          modelosContrato: { orderBy: { tipoEvento: "asc" } },
+          identidades: { orderBy: { nome: "asc" } },
+        },
       })
     : null;
 
@@ -119,6 +122,30 @@ export default async function FormPage() {
         </nav>
 
         <ContractForm>
+          {tenant && tenant.identidades.length > 0 && (
+            <div className="space-y-1">
+              <label htmlFor="identidadeContratadaId" className="text-xs font-bold text-brand-light/80 block">
+                CNPJ contratado
+              </label>
+              <select
+                id="identidadeContratadaId"
+                name="identidadeContratadaId"
+                defaultValue=""
+                className="w-full rounded-lg border border-brand-border bg-brand-navy px-3 py-2 text-brand-light text-sm focus:outline-none focus:border-brand-gold"
+              >
+                <option value="">{tenant.nome}</option>
+                {tenant.identidades.map((identidade) => (
+                  <option key={identidade.id} value={identidade.id}>
+                    {identidade.nome}
+                  </option>
+                ))}
+              </select>
+              <p className="text-[10px] text-brand-gray">
+                Por qual CNPJ este contrato deve ser emitido
+              </p>
+            </div>
+          )}
+
           <Section id="sec-contratante" title="Contratante">
             <Field label="Razão social / Nome" name="contratante" required />
             {tenant && tenant.modelosContrato.length > 0 && (

@@ -11,6 +11,8 @@ import {
   createContratoModelo,
   updateContratoModelo,
   deleteContratoModelo,
+  createIdentidadeContratada,
+  deleteIdentidadeContratada,
 } from "../actions";
 import { AdminField } from "../AdminField";
 import { ConfirmButton } from "../ConfirmButton";
@@ -28,6 +30,7 @@ export default async function EditarClientePage({
     include: {
       users: { orderBy: { createdAt: "asc" } },
       modelosContrato: { orderBy: { tipoEvento: "asc" } },
+      identidades: { orderBy: { nome: "asc" } },
     },
   });
 
@@ -178,6 +181,64 @@ export default async function EditarClientePage({
               <AdminField label="Nome do tipo de evento" name="tipoEvento" required />
             }
           />
+        </div>
+
+        <div className="bg-brand-surface border border-brand-border rounded-2xl p-6 space-y-4">
+          <div>
+            <p className="text-xs font-bold text-brand-light/80">
+              CNPJs contratados adicionais (opcional)
+            </p>
+            <p className="text-xs text-brand-gray mt-1">
+              Se o cliente emite contratos por mais de uma pessoa jurídica, cadastre cada uma
+              aqui. Quando houver pelo menos uma, o formulário mostrará um seletor de &ldquo;CNPJ
+              contratado&rdquo; — o cadastro principal (acima) continua disponível como opção padrão.
+            </p>
+          </div>
+
+          {tenant.identidades.length > 0 && (
+            <ul className="space-y-2">
+              {tenant.identidades.map((identidade) => (
+                <li
+                  key={identidade.id}
+                  className="text-sm bg-brand-navy border border-brand-border rounded-lg px-3 py-2 space-y-1"
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="font-bold">{identidade.nome}</span>
+                    <form action={deleteIdentidadeContratada.bind(null, identidade.id, tenant.id)}>
+                      <ConfirmButton
+                        label="Excluir"
+                        confirmMessage={`Excluir a identidade contratada "${identidade.nome}"?`}
+                      />
+                    </form>
+                  </div>
+                  <p className="text-xs text-brand-gray">
+                    CNPJ {identidade.cnpj} · {identidade.representante}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          )}
+
+          <form
+            action={createIdentidadeContratada.bind(null, tenant.id)}
+            className="border-t border-brand-border pt-4 space-y-3"
+          >
+            <p className="text-xs font-bold text-brand-light/80">Adicionar CNPJ contratado</p>
+            <AdminField label="Razão social (nome que aparece no contrato e no seletor)" name="nome" required />
+            <AdminField label="CNPJ" name="cnpj" required />
+            <AdminField label="Endereço completo" name="endereco" textarea required />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <AdminField label="Representante legal" name="representante" required />
+              <AdminField label="CPF do representante" name="cpfRepresentante" required />
+            </div>
+            <AdminField label="RG do representante" name="rgRepresentante" required />
+            <button
+              type="submit"
+              className="w-full rounded-full bg-brand-surface border border-brand-border text-brand-light font-bold uppercase tracking-wide text-xs py-2.5 cursor-pointer hover:border-brand-gold transition-colors"
+            >
+              Adicionar
+            </button>
+          </form>
         </div>
 
         <div className="bg-brand-surface border border-brand-border rounded-2xl p-6 space-y-4">

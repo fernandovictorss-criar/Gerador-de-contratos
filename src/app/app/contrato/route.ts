@@ -64,7 +64,20 @@ export async function POST(req: NextRequest) {
       })
     : null;
 
-  const html = renderContratoPage(tenant, dados, modelo?.html, Boolean(tipoEvento));
+  const identidadeContratadaId = String(form.get("identidadeContratadaId") ?? "").trim();
+  const identidadeContratada = identidadeContratadaId
+    ? await prisma.tenantIdentidadeContratada.findFirst({
+        where: { id: identidadeContratadaId, tenantId: tenant.id },
+      })
+    : null;
+
+  const html = renderContratoPage(
+    tenant,
+    dados,
+    modelo?.html,
+    Boolean(tipoEvento),
+    identidadeContratada ?? undefined
+  );
 
   return new NextResponse(html, {
     headers: { "Content-Type": "text/html; charset=utf-8" },

@@ -33,6 +33,7 @@ model Tenant {
   createdAt            DateTime @default(now())
   users                User[]
   modelosContrato      TenantContratoModelo[]
+  identidades          TenantIdentidadeContratada[]
 }
 
 model TenantContratoModelo {
@@ -44,6 +45,21 @@ model TenantContratoModelo {
   createdAt  DateTime @default(now())
 
   @@unique([tenantId, tipoEvento])
+}
+
+model TenantIdentidadeContratada {
+  id               String   @id @default(cuid())
+  tenantId         String
+  tenant           Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  nome             String
+  cnpj             String
+  endereco         String
+  representante    String
+  cpfRepresentante String
+  rgRepresentante  String
+  createdAt        DateTime @default(now())
+
+  @@unique([tenantId, nome])
 }
 
 model User {

@@ -161,6 +161,45 @@ export async function deleteContratoModelo(modeloId: string, tenantId: string) {
   redirect(`/admin/${tenantId}`);
 }
 
+function identidadeFieldsFromForm(formData: FormData) {
+  return {
+    nome: String(formData.get("nome") || "").trim(),
+    cnpj: String(formData.get("cnpj") || "").trim(),
+    endereco: String(formData.get("endereco") || "").trim(),
+    representante: String(formData.get("representante") || "").trim(),
+    cpfRepresentante: String(formData.get("cpfRepresentante") || "").trim(),
+    rgRepresentante: String(formData.get("rgRepresentante") || "").trim(),
+  };
+}
+
+export async function createIdentidadeContratada(tenantId: string, formData: FormData) {
+  await requireAdmin();
+
+  const fields = identidadeFieldsFromForm(formData);
+  if (
+    !fields.nome ||
+    !fields.cnpj ||
+    !fields.endereco ||
+    !fields.representante ||
+    !fields.cpfRepresentante ||
+    !fields.rgRepresentante
+  ) {
+    throw new Error("Preencha todos os campos da identidade contratada.");
+  }
+
+  await prisma.tenantIdentidadeContratada.create({ data: { tenantId, ...fields } });
+
+  revalidatePath(`/admin/${tenantId}`);
+  redirect(`/admin/${tenantId}`);
+}
+
+export async function deleteIdentidadeContratada(identidadeId: string, tenantId: string) {
+  await requireAdmin();
+  await prisma.tenantIdentidadeContratada.delete({ where: { id: identidadeId } });
+  revalidatePath(`/admin/${tenantId}`);
+  redirect(`/admin/${tenantId}`);
+}
+
 export async function setTenantBlocked(tenantId: string, bloqueado: boolean) {
   await requireAdmin();
   await prisma.tenant.update({ where: { id: tenantId }, data: { bloqueado } });

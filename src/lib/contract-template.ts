@@ -1,4 +1,4 @@
-import type { Tenant } from "@/generated/prisma/client";
+import type { Tenant, TenantIdentidadeContratada } from "@/generated/prisma/client";
 
 export type ContratoFormData = {
   contratante: string;
@@ -321,13 +321,19 @@ export function renderContratoPage(
   tenant: Tenant,
   dados: ContratoFormData,
   templateHtml?: string,
-  usarEstiloPessoaFisica: boolean = false
+  usarEstiloPessoaFisica: boolean = false,
+  identidadeContratada?: TenantIdentidadeContratada
 ): string {
   const clausulasHtml = renderClausulas(
     templateHtml || tenant.contratoModeloHtml || DEFAULT_CLAUSULAS_TEMPLATE,
     dados,
     tenant
   );
+
+  // A marca, o modelo de cláusulas e o título seguem o tenant logado (a
+  // conta). Só a identidade jurídica do CONTRATADO — nome, CNPJ, endereço e
+  // representante — muda conforme o CNPJ escolhido no formulário.
+  const contratado = identidadeContratada ?? tenant;
 
   const contratanteClause = usarEstiloPessoaFisica
     ? `<p><strong>CONTRATANTE:</strong> <strong>${escapeHtml(dados.contratante) || "_________________________"}</strong>${dados.profissao ? `, ${escapeHtml(dados.profissao)}` : ""}, portador(a) do CPF/MF sob o nº <strong>${escapeHtml(dados.docContratante) || "________________"}</strong>, residente e domiciliado(a) no endereço ${escapeHtml(dados.endContratante) || "_________________________"}, Tel: ${escapeHtml(dados.telContratante) || "____________"}.</p>`
@@ -346,13 +352,13 @@ export function renderContratoPage(
   const body = `${logoHtml}<h1>${titulo}</h1>
 <p><strong>IDENTIFICAÇÃO DAS PARTES CONTRATANTES</strong></p>
 ${contratanteClause}
-<p><strong>CONTRATADO:</strong> <strong>${escapeHtml(tenant.nome)}</strong>, portador do CNPJ: <strong>${escapeHtml(tenant.cnpj)}</strong>, com sede na ${escapeHtml(tenant.endereco)}, neste ato representada por <strong>${escapeHtml(tenant.representante)}</strong>, CPF nº <strong>${escapeHtml(tenant.cpfRepresentante)}</strong>, na qualidade de sócio-administrador/representante legal. As partes acima identificadas têm, entre si, justo e acertado o presente Contrato de Prestação de Serviços, que se regerá pelas cláusulas seguintes e pelas condições de preço, forma e termo de pagamento descritas no presente.</p>
+<p><strong>CONTRATADO:</strong> <strong>${escapeHtml(contratado.nome)}</strong>, portador do CNPJ: <strong>${escapeHtml(contratado.cnpj)}</strong>, com sede na ${escapeHtml(contratado.endereco)}, neste ato representada por <strong>${escapeHtml(contratado.representante)}</strong>, CPF nº <strong>${escapeHtml(contratado.cpfRepresentante)}</strong>, na qualidade de sócio-administrador/representante legal. As partes acima identificadas têm, entre si, justo e acertado o presente Contrato de Prestação de Serviços, que se regerá pelas cláusulas seguintes e pelas condições de preço, forma e termo de pagamento descritas no presente.</p>
 ${clausulasHtml}
 <p class="right"><strong>${escapeHtml(dados.cidadeAss) || "_______/__"}, ${formatLongDate(dados.dataContrato)}.</strong></p>
 <div class="signatures">
   <div class="signature-grid">
     <div class="signature-box">
-      <div class="signature-line">p/ ${escapeHtml(tenant.nome)}<br>${escapeHtml(tenant.representante)}<br>${escapeHtml(tenant.cpfRepresentante)}${usarMarcaEllen ? "" : ` ${escapeHtml(tenant.rgRepresentante)}`}</div>
+      <div class="signature-line">p/ ${escapeHtml(contratado.nome)}<br>${escapeHtml(contratado.representante)}<br>${escapeHtml(contratado.cpfRepresentante)}${usarMarcaEllen ? "" : ` ${escapeHtml(contratado.rgRepresentante)}`}</div>
       <div class="signature-role">Contratado</div>
     </div>
     <div class="signature-box">
