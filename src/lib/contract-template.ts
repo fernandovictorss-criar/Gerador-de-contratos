@@ -284,7 +284,7 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f2f2f3;color:#1
 .small{font-size:10.5px;color:#666;text-align:center;margin-top:22px}
 @page{size:A4;margin:30mm 25mm}
 @media(max-width:860px){.paper{width:100%;min-height:0;margin:0 auto}.contract{padding:24px 18px 48px}.contract h1{font-size:16px}.signature-grid,.witnesses{grid-template-columns:1fr;gap:24px}}
-@media print{.toolbar{display:none}body{background:#fff}.paper{box-shadow:none;width:auto;min-height:0;margin:0;border-radius:0}.contract{padding:0}.signatures{break-inside:avoid;page-break-inside:avoid}.contract h3{break-after:avoid;page-break-after:avoid}}
+@media print{.toolbar{display:none}body{background:#fff}.paper{box-shadow:none;width:auto;min-height:0;margin:0;border-radius:0}.contract{padding:0}.closing-block{break-inside:avoid;page-break-inside:avoid}.contract h3{break-after:avoid;page-break-after:avoid}}
 `;
 
 const ELLEN_CNPJ = "57.470.862/0001-03";
@@ -354,26 +354,28 @@ export function renderContratoPage(
 ${contratanteClause}
 <p><strong>CONTRATADO:</strong> <strong>${escapeHtml(contratado.nome)}</strong>, portador do CNPJ: <strong>${escapeHtml(contratado.cnpj)}</strong>, com sede na ${escapeHtml(contratado.endereco)}, neste ato representada por <strong>${escapeHtml(contratado.representante)}</strong>, CPF nº <strong>${escapeHtml(contratado.cpfRepresentante)}</strong>, na qualidade de sócio-administrador/representante legal. As partes acima identificadas têm, entre si, justo e acertado o presente Contrato de Prestação de Serviços, que se regerá pelas cláusulas seguintes e pelas condições de preço, forma e termo de pagamento descritas no presente.</p>
 ${clausulasHtml}
-<p class="right"><strong>${escapeHtml(dados.cidadeAss) || "_______/__"}, ${formatLongDate(dados.dataContrato)}.</strong></p>
-<div class="signatures">
-  <div class="signature-grid">
-    <div class="signature-box">
-      <div class="signature-line">p/ ${escapeHtml(contratado.nome)}<br>${escapeHtml(contratado.representante)}<br>${escapeHtml(contratado.cpfRepresentante)}${usarMarcaEllen ? "" : ` ${escapeHtml(contratado.rgRepresentante)}`}</div>
-      <div class="signature-role">Contratado</div>
+<div class="closing-block">
+  <p class="right"><strong>${escapeHtml(dados.cidadeAss) || "_______/__"}, ${formatLongDate(dados.dataContrato)}.</strong></p>
+  <div class="signatures">
+    <div class="signature-grid">
+      <div class="signature-box">
+        <div class="signature-line">p/ ${escapeHtml(contratado.nome)}<br>${escapeHtml(contratado.representante)}<br>${escapeHtml(contratado.cpfRepresentante)}${usarMarcaEllen ? "" : ` ${escapeHtml(contratado.rgRepresentante)}`}</div>
+        <div class="signature-role">Contratado</div>
+      </div>
+      <div class="signature-box">
+        <div class="signature-line">${escapeHtml(dados.contratante) || "CONTRATANTE"}<br>CPF/CNPJ nº ${escapeHtml(dados.docContratante) || "________________"}</div>
+        <div class="signature-role">Contratante</div>
+      </div>
     </div>
-    <div class="signature-box">
-      <div class="signature-line">${escapeHtml(dados.contratante) || "CONTRATANTE"}<br>CPF/CNPJ nº ${escapeHtml(dados.docContratante) || "________________"}</div>
-      <div class="signature-role">Contratante</div>
-    </div>
-  </div>
-  <div class="witnesses">
-    <div class="signature-box">
-      <div class="signature-line">${escapeHtml(dados.testemunha) || "Testemunha 1"}<br>CPF nº __________________</div>
-      <div class="signature-role">Testemunha</div>
-    </div>
-    <div class="signature-box">
-      <div class="signature-line">${escapeHtml(dados.testemunha2) || "Testemunha 2"}<br>CPF nº __________________</div>
-      <div class="signature-role">Testemunha</div>
+    <div class="witnesses">
+      <div class="signature-box">
+        <div class="signature-line">${escapeHtml(dados.testemunha) || "Testemunha 1"}<br>CPF nº __________________</div>
+        <div class="signature-role">Testemunha</div>
+      </div>
+      <div class="signature-box">
+        <div class="signature-line">${escapeHtml(dados.testemunha2) || "Testemunha 2"}<br>CPF nº __________________</div>
+        <div class="signature-role">Testemunha</div>
+      </div>
     </div>
   </div>
 </div>
