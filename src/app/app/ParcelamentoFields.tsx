@@ -30,7 +30,7 @@ function diffDays(a: string, b: string): number {
   return Math.round((db.getTime() - da.getTime()) / 86400000);
 }
 
-export function ParcelamentoFields() {
+export function ParcelamentoFields({ minDiasAntesEvento = 15 }: { minDiasAntesEvento?: number }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [aviso, setAviso] = useState<string | null>(null);
 
@@ -68,12 +68,12 @@ export function ParcelamentoFields() {
       const dataEvento = getDataEventoEl()?.value || "";
       if (dataFinal && dataEvento) {
         const dias = diffDays(dataFinal, dataEvento);
-        if (dias < 15) {
+        if (dias < minDiasAntesEvento) {
           dataFinalEl.setCustomValidity(
-            "A última parcela deve vencer pelo menos 15 dias antes da data do evento."
+            `A última parcela deve vencer pelo menos ${minDiasAntesEvento} dias antes da data do evento.`
           );
           setAviso(
-            "A última parcela ficou a menos de 15 dias da data do evento — ajuste a quantidade de parcelas ou a data da 1ª parcela."
+            `A última parcela ficou a menos de ${minDiasAntesEvento} dias da data do evento — ajuste a quantidade de parcelas ou a data da 1ª parcela.`
           );
           return;
         }
@@ -119,7 +119,7 @@ export function ParcelamentoFields() {
       form.removeEventListener("input", onFormInput);
       form.removeEventListener(DATA_EVENTO_CHANGED, checkPrazo);
     };
-  }, []);
+  }, [minDiasAntesEvento]);
 
   return (
     <div ref={containerRef} className="space-y-3">

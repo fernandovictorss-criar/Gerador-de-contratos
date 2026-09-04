@@ -6,6 +6,7 @@ import { LogoutButton } from "./LogoutButton";
 import { DataEventoField } from "./DataEventoField";
 import { DuracaoFields } from "./DuracaoFields";
 import { ParcelamentoFields } from "./ParcelamentoFields";
+import { ELLEN_CNPJ } from "@/lib/contract-template";
 
 const SERVICOS_ASSESSORIA = [
   {
@@ -249,7 +250,11 @@ export default async function FormPage() {
               <Field label="Valor total (R$)" name="valorTotal" placeholder="R$ 0,00" required />
               <Field label="Forma de pagamento" name="formaPagamento" placeholder="PIX" />
             </div>
-            {tenant && tenant.modelosContrato.length > 0 && <ParcelamentoFields />}
+            {tenant && tenant.modelosContrato.length > 0 && (
+              <ParcelamentoFields
+                minDiasAntesEvento={tenant.cnpj === ELLEN_CNPJ ? 7 : 15}
+              />
+            )}
             <Field
               label="Dados bancários (deixe em branco para usar o padrão)"
               name="dadosBancarios"

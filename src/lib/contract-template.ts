@@ -287,7 +287,7 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f2f2f3;color:#1
 @media print{.toolbar{display:none}body{background:#fff}.paper{box-shadow:none;width:auto;min-height:0;margin:0;border-radius:0}.contract{padding:0}.closing-block{break-inside:avoid;page-break-inside:avoid}.contract h3{break-after:avoid;page-break-after:avoid}}
 `;
 
-const ELLEN_CNPJ = "57.470.862/0001-03";
+export const ELLEN_CNPJ = "57.470.862/0001-03";
 
 const ELLEN_FONTS = `<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
