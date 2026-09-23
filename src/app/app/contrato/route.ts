@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import { renderContratoPage, type ContratoFormData } from "@/lib/contract-template";
+import { renderContratoPage, ELLEN_CNPJ, type ContratoFormData } from "@/lib/contract-template";
 
 const FIELDS: (keyof ContratoFormData)[] = [
   "contratante",
@@ -80,6 +80,24 @@ export async function POST(req: NextRequest) {
     Boolean(tipoEvento),
     identidadeContratada ?? undefined
   );
+
+  // Guarda um retrato do contrato para permitir listar/corrigir depois.
+  // Ainda restrito à Ellen Regina; nunca deve bloquear a geração do PDF.
+  if (tenant.cnpj === ELLEN_CNPJ) {
+    try {
+      await prisma.contratoGerado.create({
+        data: {
+          tenantId: tenant.id,
+          identidadeContratadaId: identidadeContratada?.id ?? null,
+          createdByUserId: session.user.id || null,
+          tipoEvento: tipoEvento || null,
+          ...dados,
+        },
+      });
+    } catch (err) {
+      console.error("Falha ao salvar contrato gerado:", err);
+    }
+  }
 
   return new NextResponse(html, {
     headers: { "Content-Type": "text/html; charset=utf-8" },

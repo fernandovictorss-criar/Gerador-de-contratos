@@ -34,6 +34,7 @@ model Tenant {
   users                User[]
   modelosContrato      TenantContratoModelo[]
   identidades          TenantIdentidadeContratada[]
+  contratosGerados     ContratoGerado[]
 }
 
 model TenantContratoModelo {
@@ -58,16 +59,68 @@ model TenantIdentidadeContratada {
   cpfRepresentante String
   rgRepresentante  String
   createdAt        DateTime @default(now())
+  contratosGerados ContratoGerado[]
 
   @@unique([tenantId, nome])
 }
 
 model User {
-  id           String   @id @default(cuid())
-  email        String   @unique
-  passwordHash String
-  role         Role     @default(USER)
-  tenantId     String?
-  tenant       Tenant?  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  createdAt    DateTime @default(now())
+  id               String   @id @default(cuid())
+  email            String   @unique
+  passwordHash     String
+  role             Role     @default(USER)
+  tenantId         String?
+  tenant           Tenant?  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  createdAt        DateTime @default(now())
+  contratosGerados ContratoGerado[]
+}
+
+// Snapshot de cada contrato gerado, para permitir listar e corrigir dados
+// depois (o formulário original não persiste nada, só renderiza o HTML).
+model ContratoGerado {
+  id                     String                      @id @default(cuid())
+  tenantId               String
+  tenant                 Tenant                      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  identidadeContratadaId String?
+  identidadeContratada   TenantIdentidadeContratada? @relation(fields: [identidadeContratadaId], references: [id], onDelete: SetNull)
+  createdByUserId        String?
+  createdByUser          User?                       @relation(fields: [createdByUserId], references: [id], onDelete: SetNull)
+  tipoEvento             String?
+
+  contratante          String @default("")
+  profissao            String @default("")
+  docContratante       String @default("")
+  telContratante       String @default("")
+  endContratante       String @default("")
+  dataEvento           String @default("")
+  dataEventoFim        String @default("")
+  dataEventoTexto      String @default("")
+  horaEvento           String @default("")
+  evento               String @default("")
+  localEvento          String @default("")
+  material             String @default("")
+  quantidadeConvidados String @default("")
+  duracaoHoras         String @default("")
+  duracaoCerimonia     String @default("")
+  duracaoRecepcao      String @default("")
+  quantidadeEquipe     String @default("")
+  valorTotal           String @default("")
+  valorEntrada         String @default("")
+  tipoEntrada          String @default("")
+  valorEntrada2        String @default("")
+  quantidadeParcelas   String @default("")
+  valorParcela         String @default("")
+  dataInicialParcelas  String @default("")
+  dataFinalParcelas    String @default("")
+  formaPagamento       String @default("")
+  dadosBancarios       String @default("")
+  cidadeAss            String @default("")
+  dataContrato         String @default("")
+  testemunha           String @default("")
+  testemunha2          String @default("")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([tenantId])
 }
