@@ -30,9 +30,16 @@ function diffDays(a: string, b: string): number {
   return Math.round((db.getTime() - da.getTime()) / 86400000);
 }
 
-export function ParcelamentoFields({ minDiasAntesEvento = 15 }: { minDiasAntesEvento?: number }) {
+export function ParcelamentoFields({
+  minDiasAntesEvento = 15,
+  permitirEntradaParcelada = false,
+}: {
+  minDiasAntesEvento?: number;
+  permitirEntradaParcelada?: boolean;
+}) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [aviso, setAviso] = useState<string | null>(null);
+  const [tipoEntrada, setTipoEntrada] = useState<"unica" | "parcelada">("unica");
 
   useEffect(() => {
     const form = containerRef.current?.closest("form");
@@ -43,21 +50,53 @@ export function ParcelamentoFields({ minDiasAntesEvento = 15 }: { minDiasAntesEv
 
     const valorTotalEl = getInput("valorTotal");
     const valorEntradaEl = getInput("valorEntrada");
+    const valorEntrada2El = getInput("valorEntrada2");
     const quantidadeParcelasEl = getInput("quantidadeParcelas");
     const valorParcelaEl = getInput("valorParcela");
     const dataInicialEl = getInput("dataInicialParcelas");
     const dataFinalEl = getInput("dataFinalParcelas");
+    const dataContratoEl = getInput("dataContrato");
     // Consultado a cada verificação: o campo de data pode ser trocado pelo
     // texto livre quando a data do evento está "a definir".
     const getDataEventoEl = () => getInput("dataEvento");
 
+    function totalEntrada(): number {
+      const e1 = parseMoney(valorEntradaEl?.value || "");
+      const e2 =
+        permitirEntradaParcelada && tipoEntrada === "parcelada"
+          ? parseMoney(valorEntrada2El?.value || "")
+          : 0;
+      return e1 + e2;
+    }
+
+    // Para a Ellen Regina, a entrada é sempre 40% do valor total: única ou
+    // dividida em duas parcelas de 20%. Substitui a entrada digitada livre.
+    function recomputeEntradaAutomatica() {
+      if (!permitirEntradaParcelada || !valorEntradaEl) return;
+      const valorTotal = parseMoney(valorTotalEl?.value || "");
+      if (valorTotal <= 0) return;
+      if (tipoEntrada === "parcelada") {
+        valorEntradaEl.value = formatMoneyInput(valorTotal * 0.2);
+        if (valorEntrada2El) valorEntrada2El.value = formatMoneyInput(valorTotal * 0.2);
+      } else {
+        valorEntradaEl.value = formatMoneyInput(valorTotal * 0.4);
+      }
+    }
+
+    // Para a Ellen Regina, as parcelas regulares começam no 3º mês contado
+    // da data de assinatura do contrato (1º mês = mês da assinatura).
+    function recomputeDataInicialEllen() {
+      if (!permitirEntradaParcelada || !dataInicialEl) return;
+      const dataContrato = dataContratoEl?.value || "";
+      if (dataContrato) dataInicialEl.value = addMonths(dataContrato, 2);
+    }
+
     function recomputeParcela() {
       if (!valorParcelaEl) return;
       const valorTotal = parseMoney(valorTotalEl?.value || "");
-      const valorEntrada = parseMoney(valorEntradaEl?.value || "");
       const qtd = Number(quantidadeParcelasEl?.value || "");
       if (valorTotal > 0 && qtd > 0) {
-        const restante = Math.max(valorTotal - valorEntrada, 0);
+        const restante = Math.max(valorTotal - totalEntrada(), 0);
         valorParcelaEl.value = formatMoneyInput(restante / qtd);
       }
     }
@@ -94,16 +133,32 @@ export function ParcelamentoFields({ minDiasAntesEvento = 15 }: { minDiasAntesEv
 
     const onParcelaInputs = () => recomputeParcela();
     const onDataInputs = () => recomputeDataFinal();
+    const onValorTotalInput = () => {
+      recomputeEntradaAutomatica();
+      recomputeParcela();
+    };
+    const onDataContratoInput = () => {
+      recomputeDataInicialEllen();
+      recomputeDataFinal();
+    };
     // Delegado no formulário: o campo de data do evento pode ser
     // remontado quando o usuário marca "Data a definir".
     const onFormInput = (e: Event) => {
-      if ((e.target as HTMLElement | null)?.getAttribute?.("name") === "dataEvento") {
-        checkPrazo();
-      }
+      const name = (e.target as HTMLElement | null)?.getAttribute?.("name");
+      if (name === "dataEvento") checkPrazo();
+      if (name === "dataContrato") onDataContratoInput();
     };
 
-    valorTotalEl?.addEventListener("input", onParcelaInputs);
+    if (permitirEntradaParcelada) {
+      recomputeEntradaAutomatica();
+      recomputeDataInicialEllen();
+      recomputeParcela();
+      recomputeDataFinal();
+    }
+
+    valorTotalEl?.addEventListener("input", onValorTotalInput);
     valorEntradaEl?.addEventListener("input", onParcelaInputs);
+    valorEntrada2El?.addEventListener("input", onParcelaInputs);
     quantidadeParcelasEl?.addEventListener("input", onParcelaInputs);
     quantidadeParcelasEl?.addEventListener("input", onDataInputs);
     dataInicialEl?.addEventListener("input", onDataInputs);
@@ -111,22 +166,75 @@ export function ParcelamentoFields({ minDiasAntesEvento = 15 }: { minDiasAntesEv
     form.addEventListener(DATA_EVENTO_CHANGED, checkPrazo);
 
     return () => {
-      valorTotalEl?.removeEventListener("input", onParcelaInputs);
+      valorTotalEl?.removeEventListener("input", onValorTotalInput);
       valorEntradaEl?.removeEventListener("input", onParcelaInputs);
+      valorEntrada2El?.removeEventListener("input", onParcelaInputs);
       quantidadeParcelasEl?.removeEventListener("input", onParcelaInputs);
       quantidadeParcelasEl?.removeEventListener("input", onDataInputs);
       dataInicialEl?.removeEventListener("input", onDataInputs);
       form.removeEventListener("input", onFormInput);
       form.removeEventListener(DATA_EVENTO_CHANGED, checkPrazo);
     };
-  }, [minDiasAntesEvento]);
+  }, [minDiasAntesEvento, permitirEntradaParcelada, tipoEntrada]);
 
   return (
     <div ref={containerRef} className="space-y-3">
+      {permitirEntradaParcelada && (
+        <div className="space-y-1">
+          <span className="text-xs font-bold text-brand-light/80 block">Forma da entrada</span>
+          <div className="flex flex-wrap gap-4 text-sm text-brand-light">
+            <label className="flex items-center gap-2">
+              <input
+                type="radio"
+                name="tipoEntrada"
+                value="unica"
+                checked={tipoEntrada === "unica"}
+                onChange={() => setTipoEntrada("unica")}
+              />
+              Entrada única (40%)
+            </label>
+            <label className="flex items-center gap-2">
+              <input
+                type="radio"
+                name="tipoEntrada"
+                value="parcelada"
+                checked={tipoEntrada === "parcelada"}
+                onChange={() => setTipoEntrada("parcelada")}
+              />
+              Entrada parcelada (20% + 20%)
+            </label>
+          </div>
+        </div>
+      )}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <ParcelaField label="Valor de entrada (R$)" name="valorEntrada" placeholder="R$ 0,00" required />
+        <ParcelaField
+          label={
+            permitirEntradaParcelada && tipoEntrada === "parcelada"
+              ? "Valor da 1ª parcela da entrada (R$)"
+              : "Valor de entrada (R$)"
+          }
+          name="valorEntrada"
+          placeholder="R$ 0,00"
+          required
+          hint={
+            permitirEntradaParcelada
+              ? tipoEntrada === "parcelada"
+                ? "Calculado automaticamente (20% do valor total), vence na assinatura"
+                : "Calculado automaticamente (40% do valor total), vence na assinatura"
+              : undefined
+          }
+        />
         <ParcelaField label="Quantidade de parcelas" name="quantidadeParcelas" required />
       </div>
+      {permitirEntradaParcelada && tipoEntrada === "parcelada" && (
+        <ParcelaField
+          label="Valor da 2ª parcela da entrada (R$)"
+          name="valorEntrada2"
+          placeholder="R$ 0,00"
+          required
+          hint="Calculado automaticamente (20% do valor total), vence 30 dias após a 1ª parcela"
+        />
+      )}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <ParcelaField
           label="Valor de cada parcela (R$)"
@@ -140,7 +248,11 @@ export function ParcelamentoFields({ minDiasAntesEvento = 15 }: { minDiasAntesEv
           name="dataInicialParcelas"
           type="date"
           required
-          hint="Selecione no calendário"
+          hint={
+            permitirEntradaParcelada
+              ? "Calculada automaticamente (3º mês a partir da assinatura)"
+              : "Selecione no calendário"
+          }
         />
         <ParcelaField
           label="Data da última parcela"

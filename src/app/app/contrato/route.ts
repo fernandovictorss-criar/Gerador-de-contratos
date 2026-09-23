@@ -23,6 +23,8 @@ const FIELDS: (keyof ContratoFormData)[] = [
   "quantidadeEquipe",
   "valorTotal",
   "valorEntrada",
+  "tipoEntrada",
+  "valorEntrada2",
   "quantidadeParcelas",
   "valorParcela",
   "dataInicialParcelas",

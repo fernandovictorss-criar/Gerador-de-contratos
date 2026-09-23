@@ -253,6 +253,7 @@ export default async function FormPage() {
             {tenant && tenant.modelosContrato.length > 0 && (
               <ParcelamentoFields
                 minDiasAntesEvento={tenant.cnpj === ELLEN_CNPJ ? 7 : 15}
+                permitirEntradaParcelada={tenant.cnpj === ELLEN_CNPJ}
               />
             )}
             <Field

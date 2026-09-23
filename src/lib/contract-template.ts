@@ -20,6 +20,8 @@ export type ContratoFormData = {
   quantidadeEquipe: string;
   valorTotal: string;
   valorEntrada: string;
+  tipoEntrada: string;
+  valorEntrada2: string;
   quantidadeParcelas: string;
   valorParcela: string;
   dataInicialParcelas: string;
@@ -61,6 +63,13 @@ function formatMoney(raw: string): string {
     .replace(/[^0-9.]/g, "");
   const numero = Number(limpo || 0);
   return numero.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+}
+
+function addDays(dateStr: string, days: number): string {
+  const d = new Date(`${dateStr}T12:00:00`);
+  if (Number.isNaN(d.getTime())) return "";
+  d.setDate(d.getDate() + days);
+  return d.toISOString().slice(0, 10);
 }
 
 function formatLongDate(dateStr: string): string {
@@ -151,6 +160,37 @@ export const MERGE_FIELDS: MergeField[] = [
     key: "valorEntrada",
     label: "Valor de entrada",
     format: (d) => (d.valorEntrada ? formatMoney(d.valorEntrada) : "______"),
+  },
+  {
+    key: "valorEntrada2",
+    label: "Valor da 2ª parcela da entrada",
+    format: (d) => (d.tipoEntrada === "parcelada" && d.valorEntrada2 ? formatMoney(d.valorEntrada2) : ""),
+  },
+  {
+    key: "dataEntrada1",
+    label: "Data da entrada (ou 1ª parcela da entrada)",
+    format: (d) => (d.dataContrato ? formatLongDate(d.dataContrato) : "______"),
+  },
+  {
+    key: "dataEntrada2",
+    label: "Data da 2ª parcela da entrada",
+    format: (d) =>
+      d.tipoEntrada === "parcelada" && d.dataContrato ? formatLongDate(addDays(d.dataContrato, 30)) : "",
+  },
+  {
+    key: "condicoesEntrada",
+    label: "Condições da entrada (texto completo)",
+    format: (d) => {
+      if (!d.valorEntrada) return "______";
+      if (d.tipoEntrada === "parcelada" && d.valorEntrada2) {
+        const data1 = d.dataContrato ? formatLongDate(d.dataContrato) : "______";
+        const data2 = d.dataContrato ? formatLongDate(addDays(d.dataContrato, 30)) : "______";
+        return `entrada dividida em 2 (duas) parcelas: ${formatMoney(d.valorEntrada)}, com vencimento em ${data1}, e ${formatMoney(d.valorEntrada2)}, com vencimento em ${data2}`;
+      }
+      return `entrada única de ${formatMoney(d.valorEntrada)}${
+        d.dataContrato ? `, com vencimento em ${formatLongDate(d.dataContrato)}` : ""
+      }`;
+    },
   },
   {
     key: "quantidadeParcelas",
