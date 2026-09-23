@@ -24,6 +24,13 @@ function addMonths(dateStr: string, months: number): string {
   return d.toISOString().slice(0, 10);
 }
 
+function addDays(dateStr: string, days: number): string {
+  const d = new Date(`${dateStr}T12:00:00`);
+  if (Number.isNaN(d.getTime())) return "";
+  d.setDate(d.getDate() + days);
+  return d.toISOString().slice(0, 10);
+}
+
 function diffDays(a: string, b: string): number {
   const da = new Date(`${a}T12:00:00`);
   const db = new Date(`${b}T12:00:00`);
@@ -83,12 +90,15 @@ export function ParcelamentoFields({
       }
     }
 
-    // Para a Ellen Regina, as parcelas regulares começam no 3º mês contado
-    // da data de assinatura do contrato (1º mês = mês da assinatura).
+    // Para a Ellen Regina, a 1ª parcela regular vence 30 dias após a última
+    // parcela da entrada: entrada única = assinatura + 30 dias; entrada
+    // parcelada = assinatura + 30 (2ª parcela da entrada) + 30 dias.
     function recomputeDataInicialEllen() {
       if (!permitirEntradaParcelada || !dataInicialEl) return;
       const dataContrato = dataContratoEl?.value || "";
-      if (dataContrato) dataInicialEl.value = addMonths(dataContrato, 2);
+      if (!dataContrato) return;
+      const diasAposAssinatura = tipoEntrada === "parcelada" ? 60 : 30;
+      dataInicialEl.value = addDays(dataContrato, diasAposAssinatura);
     }
 
     function recomputeParcela() {
@@ -250,7 +260,9 @@ export function ParcelamentoFields({
           required
           hint={
             permitirEntradaParcelada
-              ? "Calculada automaticamente (3º mês a partir da assinatura)"
+              ? tipoEntrada === "parcelada"
+                ? "Calculada automaticamente (30 dias após a 2ª parcela da entrada)"
+                : "Calculada automaticamente (30 dias após a entrada)"
               : "Selecione no calendário"
           }
         />
