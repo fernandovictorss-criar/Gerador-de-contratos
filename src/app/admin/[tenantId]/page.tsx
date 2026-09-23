@@ -17,7 +17,7 @@ import {
 import { AdminField } from "../AdminField";
 import { ConfirmButton } from "../ConfirmButton";
 import { ContractTemplateEditor } from "../ContractTemplateEditor";
-import { DEFAULT_CLAUSULAS_TEMPLATE } from "@/lib/contract-template";
+import { DEFAULT_CLAUSULAS_TEMPLATE, ELLEN_CNPJ } from "@/lib/contract-template";
 
 export default async function EditarClientePage({
   params,
@@ -35,6 +35,11 @@ export default async function EditarClientePage({
   });
 
   if (!tenant) notFound();
+
+  // A Ellen Regina não quer o representante legal (nome/CPF/RG) exibido no
+  // contrato nem preenchido aqui; os valores atuais seguem salvos via campos
+  // ocultos para não violar a validação de campos obrigatórios no servidor.
+  const isEllen = tenant.cnpj === ELLEN_CNPJ;
 
   return (
     <main className="min-h-screen bg-brand-navy text-brand-light px-4 py-10">
@@ -82,29 +87,40 @@ export default async function EditarClientePage({
           className="space-y-4 bg-brand-surface border border-brand-border rounded-2xl p-6"
         >
           <AdminField label="Razão social / Nome" name="nome" defaultValue={tenant.nome} required />
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <AdminField label="CNPJ" name="cnpj" defaultValue={tenant.cnpj} required />
-            <AdminField
-              label="Representante legal"
-              name="representante"
-              defaultValue={tenant.representante}
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <AdminField
-              label="CPF do representante"
-              name="cpfRepresentante"
-              defaultValue={tenant.cpfRepresentante}
-              required
-            />
-            <AdminField
-              label="RG do representante"
-              name="rgRepresentante"
-              defaultValue={tenant.rgRepresentante}
-              required
-            />
-          </div>
+          {isEllen ? (
+            <>
+              <AdminField label="CNPJ" name="cnpj" defaultValue={tenant.cnpj} required />
+              <input type="hidden" name="representante" defaultValue={tenant.representante} />
+              <input type="hidden" name="cpfRepresentante" defaultValue={tenant.cpfRepresentante} />
+              <input type="hidden" name="rgRepresentante" defaultValue={tenant.rgRepresentante} />
+            </>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <AdminField label="CNPJ" name="cnpj" defaultValue={tenant.cnpj} required />
+                <AdminField
+                  label="Representante legal"
+                  name="representante"
+                  defaultValue={tenant.representante}
+                  required
+                />
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <AdminField
+                  label="CPF do representante"
+                  name="cpfRepresentante"
+                  defaultValue={tenant.cpfRepresentante}
+                  required
+                />
+                <AdminField
+                  label="RG do representante"
+                  name="rgRepresentante"
+                  defaultValue={tenant.rgRepresentante}
+                  required
+                />
+              </div>
+            </>
+          )}
           <AdminField
             label="Endereço completo"
             name="endereco"

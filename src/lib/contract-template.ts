@@ -389,17 +389,27 @@ export function renderContratoPage(
     ? `<img class="contract-logo" src="/ellen-regina-logo.png" alt="${escapeHtml(tenant.nome)}">`
     : "";
 
+  // A Ellen Regina opera como pessoa física com CNPJ (MEI/autônoma) e não
+  // quer o representante legal (nome, CPF, RG) citado no contrato.
+  const representanteClause = usarMarcaEllen
+    ? ""
+    : `, neste ato representada por <strong>${escapeHtml(contratado.representante)}</strong>, CPF nº <strong>${escapeHtml(contratado.cpfRepresentante)}</strong>, na qualidade de sócio-administrador/representante legal`;
+
+  const assinaturaContratado = usarMarcaEllen
+    ? `p/ ${escapeHtml(contratado.nome)}<br>CNPJ ${escapeHtml(contratado.cnpj)}`
+    : `p/ ${escapeHtml(contratado.nome)}<br>${escapeHtml(contratado.representante)}<br>${escapeHtml(contratado.cpfRepresentante)} ${escapeHtml(contratado.rgRepresentante)}`;
+
   const body = `${logoHtml}<h1>${titulo}</h1>
 <p><strong>IDENTIFICAÇÃO DAS PARTES CONTRATANTES</strong></p>
 ${contratanteClause}
-<p><strong>CONTRATADO:</strong> <strong>${escapeHtml(contratado.nome)}</strong>, portador do CNPJ: <strong>${escapeHtml(contratado.cnpj)}</strong>, com sede na ${escapeHtml(contratado.endereco)}, neste ato representada por <strong>${escapeHtml(contratado.representante)}</strong>, CPF nº <strong>${escapeHtml(contratado.cpfRepresentante)}</strong>, na qualidade de sócio-administrador/representante legal. As partes acima identificadas têm, entre si, justo e acertado o presente Contrato de Prestação de Serviços, que se regerá pelas cláusulas seguintes e pelas condições de preço, forma e termo de pagamento descritas no presente.</p>
+<p><strong>CONTRATADO:</strong> <strong>${escapeHtml(contratado.nome)}</strong>, portador do CNPJ: <strong>${escapeHtml(contratado.cnpj)}</strong>, com sede na ${escapeHtml(contratado.endereco)}${representanteClause}. As partes acima identificadas têm, entre si, justo e acertado o presente Contrato de Prestação de Serviços, que se regerá pelas cláusulas seguintes e pelas condições de preço, forma e termo de pagamento descritas no presente.</p>
 ${clausulasHtml}
 <div class="closing-block">
   <p class="right"><strong>${escapeHtml(dados.cidadeAss) || "_______/__"}, ${formatLongDate(dados.dataContrato)}.</strong></p>
   <div class="signatures">
     <div class="signature-grid">
       <div class="signature-box">
-        <div class="signature-line">p/ ${escapeHtml(contratado.nome)}<br>${escapeHtml(contratado.representante)}<br>${escapeHtml(contratado.cpfRepresentante)}${usarMarcaEllen ? "" : ` ${escapeHtml(contratado.rgRepresentante)}`}</div>
+        <div class="signature-line">${assinaturaContratado}</div>
         <div class="signature-role">Contratado</div>
       </div>
       <div class="signature-box">
