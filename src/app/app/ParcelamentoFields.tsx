@@ -78,25 +78,35 @@ export function ParcelamentoFields({
 
     // Para a Ellen Regina, a entrada é sempre 40% do valor total: única ou
     // dividida em duas parcelas de 20%. Substitui a entrada digitada livre.
+    // Sem valor total, limpa para não exibir um valor obsoleto.
     function recomputeEntradaAutomatica() {
       if (!permitirEntradaParcelada || !valorEntradaEl) return;
       const valorTotal = parseMoney(valorTotalEl?.value || "");
-      if (valorTotal <= 0) return;
+      if (valorTotal <= 0) {
+        valorEntradaEl.value = "";
+        if (valorEntrada2El) valorEntrada2El.value = "";
+        return;
+      }
       if (tipoEntrada === "parcelada") {
         valorEntradaEl.value = formatMoneyInput(valorTotal * 0.2);
         if (valorEntrada2El) valorEntrada2El.value = formatMoneyInput(valorTotal * 0.2);
       } else {
         valorEntradaEl.value = formatMoneyInput(valorTotal * 0.4);
+        if (valorEntrada2El) valorEntrada2El.value = "";
       }
     }
 
     // Para a Ellen Regina, a 1ª parcela regular vence 30 dias após a última
     // parcela da entrada: entrada única = assinatura + 30 dias; entrada
     // parcelada = assinatura + 30 (2ª parcela da entrada) + 30 dias.
+    // Sem data de assinatura, limpa para não exibir uma data obsoleta.
     function recomputeDataInicialEllen() {
       if (!permitirEntradaParcelada || !dataInicialEl) return;
       const dataContrato = dataContratoEl?.value || "";
-      if (!dataContrato) return;
+      if (!dataContrato) {
+        dataInicialEl.value = "";
+        return;
+      }
       const diasAposAssinatura = tipoEntrada === "parcelada" ? 60 : 30;
       dataInicialEl.value = addDays(dataContrato, diasAposAssinatura);
     }
@@ -108,6 +118,8 @@ export function ParcelamentoFields({
       if (valorTotal > 0 && qtd > 0) {
         const restante = Math.max(valorTotal - totalEntrada(), 0);
         valorParcelaEl.value = formatMoneyInput(restante / qtd);
+      } else {
+        valorParcelaEl.value = "";
       }
     }
 
@@ -137,6 +149,8 @@ export function ParcelamentoFields({
       const qtd = Number(quantidadeParcelasEl?.value || "");
       if (dataInicial && qtd > 0) {
         dataFinalEl.value = addMonths(dataInicial, qtd - 1);
+      } else {
+        dataFinalEl.value = "";
       }
       checkPrazo();
     }
@@ -173,6 +187,9 @@ export function ParcelamentoFields({
     quantidadeParcelasEl?.addEventListener("input", onDataInputs);
     dataInicialEl?.addEventListener("input", onDataInputs);
     form.addEventListener("input", onFormInput);
+    // Alguns seletores de data nativos disparam apenas "change" ao escolher
+    // uma data no calendário, então o gatilho da data do contrato o cobre.
+    form.addEventListener("change", onFormInput);
     form.addEventListener(DATA_EVENTO_CHANGED, checkPrazo);
 
     return () => {
@@ -183,6 +200,7 @@ export function ParcelamentoFields({
       quantidadeParcelasEl?.removeEventListener("input", onDataInputs);
       dataInicialEl?.removeEventListener("input", onDataInputs);
       form.removeEventListener("input", onFormInput);
+      form.removeEventListener("change", onFormInput);
       form.removeEventListener(DATA_EVENTO_CHANGED, checkPrazo);
     };
   }, [minDiasAntesEvento, permitirEntradaParcelada, tipoEntrada]);
@@ -226,6 +244,7 @@ export function ParcelamentoFields({
           name="valorEntrada"
           placeholder="R$ 0,00"
           required
+          readOnly={permitirEntradaParcelada}
           hint={
             permitirEntradaParcelada
               ? tipoEntrada === "parcelada"
@@ -242,6 +261,7 @@ export function ParcelamentoFields({
           name="valorEntrada2"
           placeholder="R$ 0,00"
           required
+          readOnly
           hint="Calculado automaticamente (20% do valor total), vence 30 dias após a 1ª parcela"
         />
       )}
@@ -251,6 +271,7 @@ export function ParcelamentoFields({
           name="valorParcela"
           placeholder="R$ 0,00"
           required
+          readOnly={permitirEntradaParcelada}
           hint="Calculado automaticamente"
         />
         <ParcelaField
@@ -258,6 +279,7 @@ export function ParcelamentoFields({
           name="dataInicialParcelas"
           type="date"
           required
+          readOnly={permitirEntradaParcelada}
           hint={
             permitirEntradaParcelada
               ? tipoEntrada === "parcelada"
@@ -271,6 +293,7 @@ export function ParcelamentoFields({
           name="dataFinalParcelas"
           type="date"
           required
+          readOnly={permitirEntradaParcelada}
           hint="Calculada automaticamente"
         />
       </div>
@@ -290,6 +313,7 @@ function ParcelaField({
   placeholder,
   required = false,
   hint,
+  readOnly = false,
 }: {
   label: string;
   name: string;
@@ -297,6 +321,7 @@ function ParcelaField({
   placeholder?: string;
   required?: boolean;
   hint?: string;
+  readOnly?: boolean;
 }) {
   return (
     <div className="space-y-1">
@@ -310,7 +335,11 @@ function ParcelaField({
         type={type}
         placeholder={placeholder}
         required={required}
-        className="w-full rounded-lg border border-brand-border bg-brand-navy px-3 py-2 text-brand-light text-sm focus:outline-none focus:border-brand-gold"
+        readOnly={readOnly}
+        tabIndex={readOnly ? -1 : undefined}
+        className={`w-full rounded-lg border border-brand-border px-3 py-2 text-brand-light text-sm focus:outline-none focus:border-brand-gold ${
+          readOnly ? "bg-brand-surface/60 cursor-not-allowed text-brand-light/70" : "bg-brand-navy"
+        }`}
       />
       {hint && <p className="text-[10px] text-brand-gray">{hint}</p>}
     </div>
