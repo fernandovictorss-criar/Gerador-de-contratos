@@ -1,6 +1,7 @@
 import { auth, signOut } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import Image from "next/image";
+import Link from "next/link";
 import { ContractForm } from "./ContractForm";
 import { LogoutButton } from "./LogoutButton";
 import { DataEventoField } from "./DataEventoField";
@@ -104,7 +105,10 @@ export default async function FormPage() {
         </div>
 
         <p className="text-brand-gray text-xs mb-4">
-          Preencha os dados abaixo para gerar o contrato pronto para assinatura. Nenhum dado é salvo após a geração.
+          Preencha os dados abaixo para gerar o contrato pronto para assinatura.{" "}
+          {tenant?.cnpj === ELLEN_CNPJ
+            ? 'Os dados ficam salvos em "Contratos gerados", onde é possível corrigi-los depois.'
+            : "Nenhum dado é salvo após a geração."}
         </p>
 
         <nav className="flex gap-4 text-xs text-brand-gray overflow-x-auto pb-3 mb-2 border-b border-brand-border">
@@ -120,6 +124,14 @@ export default async function FormPage() {
           <a href="#sec-assinatura" className="hover:text-brand-gold whitespace-nowrap">
             Assinatura
           </a>
+          {tenant?.cnpj === ELLEN_CNPJ && (
+            <Link
+              href="/app/contratos"
+              className="hover:text-brand-gold whitespace-nowrap ml-auto text-brand-gold"
+            >
+              Contratos gerados
+            </Link>
+          )}
         </nav>
 
         <ContractForm>
