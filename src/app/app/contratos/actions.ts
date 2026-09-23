@@ -3,6 +3,7 @@
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import type { ContratoFormData } from "@/lib/contract-template";
 
 const FIELDS: (keyof ContratoFormData)[] = [
@@ -70,4 +71,20 @@ export async function updateContratoGerado(contratoId: string, formData: FormDat
   });
 
   redirect(`/app/contratos/${contratoId}/imprimir`);
+}
+
+export async function deleteContratoGerado(contratoId: string) {
+  const session = await auth();
+  if (!session?.user?.tenantId) {
+    throw new Error("Não autorizado.");
+  }
+
+  // deleteMany com o tenantId garante que só apaga um contrato do próprio
+  // cliente logado (e não falha se o id não pertencer a ele).
+  await prisma.contratoGerado.deleteMany({
+    where: { id: contratoId, tenantId: session.user.tenantId },
+  });
+
+  revalidatePath("/app/contratos");
+  redirect("/app/contratos");
 }

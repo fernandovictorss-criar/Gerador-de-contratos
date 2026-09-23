@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { ELLEN_CNPJ } from "@/lib/contract-template";
+import { ConfirmButton } from "@/app/admin/ConfirmButton";
+import { deleteContratoGerado } from "./actions";
 
 export default async function ContratosGeradosPage() {
   const session = await auth();
@@ -76,6 +78,13 @@ export default async function ContratosGeradosPage() {
                   >
                     Corrigir
                   </Link>
+                  <form action={deleteContratoGerado.bind(null, contrato.id)}>
+                    <ConfirmButton
+                      label="Excluir"
+                      confirmMessage={`Excluir o contrato de "${contrato.contratante || "sem nome"}"? Essa ação não pode ser desfeita.`}
+                      className="rounded-full bg-transparent border border-brand-border text-brand-gray font-bold uppercase tracking-wide text-xs px-3 py-2 hover:border-brand-gold hover:text-brand-light transition-colors whitespace-nowrap cursor-pointer"
+                    />
+                  </form>
                 </div>
               </li>
             ))}
