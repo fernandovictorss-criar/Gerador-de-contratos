@@ -174,6 +174,13 @@ export function ParcelamentoFields({
     };
 
     if (permitirEntradaParcelada) {
+      // A maioria dos contratos é assinada no mesmo dia do preenchimento, e as
+      // datas de parcela dependem da data do contrato. Preenche com hoje (fuso
+      // local) quando ainda estiver vazia, para as datas já virem calculadas.
+      if (dataContratoEl && !dataContratoEl.value) {
+        const hoje = new Date();
+        dataContratoEl.value = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, "0")}-${String(hoje.getDate()).padStart(2, "0")}`;
+      }
       recomputeEntradaAutomatica();
       recomputeDataInicialEllen();
       recomputeParcela();
