@@ -240,15 +240,36 @@ export default async function EditarClientePage({
                       defaultValue={identidade.nome}
                       required
                     />
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <AdminField label="CNPJ" name="cnpj" defaultValue={identidade.cnpj} required />
-                      <AdminField
-                        label="Representante legal"
-                        name="representante"
-                        defaultValue={identidade.representante}
-                        required
-                      />
-                    </div>
+                    {isEllen ? (
+                      <>
+                        <AdminField label="CNPJ" name="cnpj" defaultValue={identidade.cnpj} required />
+                        <input
+                          type="hidden"
+                          name="representante"
+                          defaultValue={identidade.representante}
+                        />
+                        <input
+                          type="hidden"
+                          name="cpfRepresentante"
+                          defaultValue={identidade.cpfRepresentante}
+                        />
+                        <input
+                          type="hidden"
+                          name="rgRepresentante"
+                          defaultValue={identidade.rgRepresentante}
+                        />
+                      </>
+                    ) : (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <AdminField label="CNPJ" name="cnpj" defaultValue={identidade.cnpj} required />
+                        <AdminField
+                          label="Representante legal"
+                          name="representante"
+                          defaultValue={identidade.representante}
+                          required
+                        />
+                      </div>
+                    )}
                     <AdminField
                       label="Endereço completo"
                       name="endereco"
@@ -256,20 +277,22 @@ export default async function EditarClientePage({
                       defaultValue={identidade.endereco}
                       required
                     />
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <AdminField
-                        label="CPF do representante"
-                        name="cpfRepresentante"
-                        defaultValue={identidade.cpfRepresentante}
-                        required
-                      />
-                      <AdminField
-                        label="RG do representante"
-                        name="rgRepresentante"
-                        defaultValue={identidade.rgRepresentante}
-                        required
-                      />
-                    </div>
+                    {!isEllen && (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <AdminField
+                          label="CPF do representante"
+                          name="cpfRepresentante"
+                          defaultValue={identidade.cpfRepresentante}
+                          required
+                        />
+                        <AdminField
+                          label="RG do representante"
+                          name="rgRepresentante"
+                          defaultValue={identidade.rgRepresentante}
+                          required
+                        />
+                      </div>
+                    )}
                     <button
                       type="submit"
                       className="w-full rounded-full bg-brand-surface border border-brand-border text-brand-light font-bold uppercase tracking-wide text-xs py-2.5 cursor-pointer hover:border-brand-gold transition-colors"
@@ -290,11 +313,15 @@ export default async function EditarClientePage({
             <AdminField label="Razão social (nome que aparece no contrato e no seletor)" name="nome" required />
             <AdminField label="CNPJ" name="cnpj" required />
             <AdminField label="Endereço completo" name="endereco" textarea required />
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <AdminField label="Representante legal" name="representante" required />
-              <AdminField label="CPF do representante" name="cpfRepresentante" required />
-            </div>
-            <AdminField label="RG do representante" name="rgRepresentante" required />
+            {!isEllen && (
+              <>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <AdminField label="Representante legal" name="representante" required />
+                  <AdminField label="CPF do representante" name="cpfRepresentante" required />
+                </div>
+                <AdminField label="RG do representante" name="rgRepresentante" required />
+              </>
+            )}
             <button
               type="submit"
               className="w-full rounded-full bg-brand-surface border border-brand-border text-brand-light font-bold uppercase tracking-wide text-xs py-2.5 cursor-pointer hover:border-brand-gold transition-colors"

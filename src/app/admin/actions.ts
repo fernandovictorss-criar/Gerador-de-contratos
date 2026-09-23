@@ -176,14 +176,11 @@ export async function createIdentidadeContratada(tenantId: string, formData: For
   await requireAdmin();
 
   const fields = identidadeFieldsFromForm(formData);
-  if (
-    !fields.nome ||
-    !fields.cnpj ||
-    !fields.endereco ||
-    !fields.representante ||
-    !fields.cpfRepresentante ||
-    !fields.rgRepresentante
-  ) {
+  // Representante/CPF/RG são opcionais aqui: a Ellen Regina não exibe esses
+  // campos no formulário (não constam no contrato dela), então ficam vazios;
+  // para os demais tenants o atributo "required" do campo já garante o
+  // preenchimento no navegador.
+  if (!fields.nome || !fields.cnpj || !fields.endereco) {
     throw new Error("Preencha todos os campos da identidade contratada.");
   }
 
@@ -201,14 +198,9 @@ export async function updateIdentidadeContratada(
   await requireAdmin();
 
   const fields = identidadeFieldsFromForm(formData);
-  if (
-    !fields.nome ||
-    !fields.cnpj ||
-    !fields.endereco ||
-    !fields.representante ||
-    !fields.cpfRepresentante ||
-    !fields.rgRepresentante
-  ) {
+  // Ver comentário em createIdentidadeContratada: representante/CPF/RG são
+  // opcionais para permitir salvar identidades da Ellen Regina sem eles.
+  if (!fields.nome || !fields.cnpj || !fields.endereco) {
     throw new Error("Preencha todos os campos da identidade contratada.");
   }
 
