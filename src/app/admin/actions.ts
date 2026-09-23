@@ -193,6 +193,34 @@ export async function createIdentidadeContratada(tenantId: string, formData: For
   redirect(`/admin/${tenantId}`);
 }
 
+export async function updateIdentidadeContratada(
+  identidadeId: string,
+  tenantId: string,
+  formData: FormData
+) {
+  await requireAdmin();
+
+  const fields = identidadeFieldsFromForm(formData);
+  if (
+    !fields.nome ||
+    !fields.cnpj ||
+    !fields.endereco ||
+    !fields.representante ||
+    !fields.cpfRepresentante ||
+    !fields.rgRepresentante
+  ) {
+    throw new Error("Preencha todos os campos da identidade contratada.");
+  }
+
+  await prisma.tenantIdentidadeContratada.update({
+    where: { id: identidadeId },
+    data: fields,
+  });
+
+  revalidatePath(`/admin/${tenantId}`);
+  redirect(`/admin/${tenantId}`);
+}
+
 export async function deleteIdentidadeContratada(identidadeId: string, tenantId: string) {
   await requireAdmin();
   await prisma.tenantIdentidadeContratada.delete({ where: { id: identidadeId } });

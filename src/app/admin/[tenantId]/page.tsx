@@ -12,6 +12,7 @@ import {
   updateContratoModelo,
   deleteContratoModelo,
   createIdentidadeContratada,
+  updateIdentidadeContratada,
   deleteIdentidadeContratada,
 } from "../actions";
 import { AdminField } from "../AdminField";
@@ -212,14 +213,16 @@ export default async function EditarClientePage({
           </div>
 
           {tenant.identidades.length > 0 && (
-            <ul className="space-y-2">
+            <ul className="space-y-3">
               {tenant.identidades.map((identidade) => (
                 <li
                   key={identidade.id}
-                  className="text-sm bg-brand-navy border border-brand-border rounded-lg px-3 py-2 space-y-1"
+                  className="bg-brand-navy border border-brand-border rounded-lg p-3 space-y-3"
                 >
                   <div className="flex items-center justify-between gap-3">
-                    <span className="font-bold">{identidade.nome}</span>
+                    <span className="text-xs font-bold text-brand-light/80">
+                      Editar identidade contratada
+                    </span>
                     <form action={deleteIdentidadeContratada.bind(null, identidade.id, tenant.id)}>
                       <ConfirmButton
                         label="Excluir"
@@ -227,9 +230,53 @@ export default async function EditarClientePage({
                       />
                     </form>
                   </div>
-                  <p className="text-xs text-brand-gray">
-                    CNPJ {identidade.cnpj} · {identidade.representante}
-                  </p>
+                  <form
+                    action={updateIdentidadeContratada.bind(null, identidade.id, tenant.id)}
+                    className="space-y-3"
+                  >
+                    <AdminField
+                      label="Razão social"
+                      name="nome"
+                      defaultValue={identidade.nome}
+                      required
+                    />
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <AdminField label="CNPJ" name="cnpj" defaultValue={identidade.cnpj} required />
+                      <AdminField
+                        label="Representante legal"
+                        name="representante"
+                        defaultValue={identidade.representante}
+                        required
+                      />
+                    </div>
+                    <AdminField
+                      label="Endereço completo"
+                      name="endereco"
+                      textarea
+                      defaultValue={identidade.endereco}
+                      required
+                    />
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <AdminField
+                        label="CPF do representante"
+                        name="cpfRepresentante"
+                        defaultValue={identidade.cpfRepresentante}
+                        required
+                      />
+                      <AdminField
+                        label="RG do representante"
+                        name="rgRepresentante"
+                        defaultValue={identidade.rgRepresentante}
+                        required
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      className="w-full rounded-full bg-brand-surface border border-brand-border text-brand-light font-bold uppercase tracking-wide text-xs py-2.5 cursor-pointer hover:border-brand-gold transition-colors"
+                    >
+                      Salvar identidade
+                    </button>
+                  </form>
                 </li>
               ))}
             </ul>
