@@ -385,6 +385,10 @@ export function renderContratoPage(
     ? "CONTRATO DE PRESTAÇÃO DE SERVIÇOS DE ASSESSORIA E CERIMONIAL"
     : "CONTRATO DE PRESTAÇÃO DE SERVIÇO";
 
+  // Nome usado no <title> — sugestão de nome de arquivo ao salvar como PDF.
+  // Para a Ellen, um nome amigável fixo em vez da razão social com CNPJ.
+  const nomeParaArquivo = usarMarcaEllen ? "Assessoria e Cerimonial Ellen Regina" : tenant.nome;
+
   const logoHtml = usarMarcaEllen
     ? `<img class="contract-logo" src="/ellen-regina-logo.png" alt="${escapeHtml(tenant.nome)}">`
     : "";
@@ -436,7 +440,7 @@ ${usarMarcaEllen ? "" : `<p class="small">Documento gerado internamente. Conferi
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Contrato | ${escapeHtml(tenant.nome)}</title>
+<title>Contrato | ${escapeHtml(nomeParaArquivo)}</title>
 ${usarMarcaEllen ? ELLEN_FONTS : ""}
 <style>${STYLE}${usarMarcaEllen ? ELLEN_THEME : ""}</style>
 </head>
