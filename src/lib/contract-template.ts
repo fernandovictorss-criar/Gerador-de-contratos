@@ -187,6 +187,11 @@ export const MERGE_FIELDS: MergeField[] = [
         const data2 = d.dataContrato ? formatLongDate(addDays(d.dataContrato, 30)) : "______";
         return `entrada dividida em 2 (duas) parcelas: ${formatMoney(d.valorEntrada)}, com vencimento em ${data1}, e ${formatMoney(d.valorEntrada2)}, com vencimento em ${data2}`;
       }
+      if (d.tipoEntrada === "tresVezes") {
+        return `1ª parcela de ${formatMoney(d.valorEntrada)}${
+          d.dataContrato ? `, com vencimento em ${formatLongDate(d.dataContrato)}` : ""
+        }`;
+      }
       return `entrada única de ${formatMoney(d.valorEntrada)}${
         d.dataContrato ? `, com vencimento em ${formatLongDate(d.dataContrato)}` : ""
       }`;

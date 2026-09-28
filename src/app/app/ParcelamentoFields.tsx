@@ -46,7 +46,7 @@ export function ParcelamentoFields({
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [aviso, setAviso] = useState<string | null>(null);
-  const [tipoEntrada, setTipoEntrada] = useState<"unica" | "parcelada">("unica");
+  const [tipoEntrada, setTipoEntrada] = useState<"unica" | "parcelada" | "tresVezes">("unica");
 
   useEffect(() => {
     const form = containerRef.current?.closest("form");
@@ -76,9 +76,11 @@ export function ParcelamentoFields({
       return e1 + e2;
     }
 
-    // Para a Ellen Regina, a entrada é sempre 40% do valor total: única ou
-    // dividida em duas parcelas de 20%. Substitui a entrada digitada livre.
-    // Sem valor total, limpa para não exibir um valor obsoleto.
+    // Para a Ellen Regina, a entrada é 40% do valor total (única ou dividida
+    // em duas parcelas de 20%), ou — no modo "3 vezes" — não existe entrada
+    // separada: o total é dividido em 3 parcelas iguais, e a "1ª parcela"
+    // aqui representa só a primeira dessas 3. Substitui a entrada digitada
+    // livre. Sem valor total, limpa para não exibir um valor obsoleto.
     function recomputeEntradaAutomatica() {
       if (!permitirEntradaParcelada || !valorEntradaEl) return;
       const valorTotal = parseMoney(valorTotalEl?.value || "");
@@ -90,6 +92,9 @@ export function ParcelamentoFields({
       if (tipoEntrada === "parcelada") {
         valorEntradaEl.value = formatMoneyInput(valorTotal * 0.2);
         if (valorEntrada2El) valorEntrada2El.value = formatMoneyInput(valorTotal * 0.2);
+      } else if (tipoEntrada === "tresVezes") {
+        valorEntradaEl.value = formatMoneyInput(valorTotal / 3);
+        if (valorEntrada2El) valorEntrada2El.value = "";
       } else {
         valorEntradaEl.value = formatMoneyInput(valorTotal * 0.4);
         if (valorEntrada2El) valorEntrada2El.value = "";
@@ -98,7 +103,9 @@ export function ParcelamentoFields({
 
     // Para a Ellen Regina, a 1ª parcela regular vence 30 dias após a última
     // parcela da entrada: entrada única = assinatura + 30 dias; entrada
-    // parcelada = assinatura + 30 (2ª parcela da entrada) + 30 dias.
+    // parcelada = assinatura + 30 (2ª parcela da entrada) + 30 dias. No modo
+    // "3 vezes", não há entrada: a 2ª das 3 parcelas (a "1ª parcela regular"
+    // aqui) vence 1 mês após a assinatura, mantendo cadência mensal.
     // Sem data de assinatura, limpa para não exibir uma data obsoleta.
     function recomputeDataInicialEllen() {
       if (!permitirEntradaParcelada || !dataInicialEl) return;
@@ -107,8 +114,21 @@ export function ParcelamentoFields({
         dataInicialEl.value = "";
         return;
       }
+      if (tipoEntrada === "tresVezes") {
+        dataInicialEl.value = addMonths(dataContrato, 1);
+        return;
+      }
       const diasAposAssinatura = tipoEntrada === "parcelada" ? 60 : 30;
       dataInicialEl.value = addDays(dataContrato, diasAposAssinatura);
+    }
+
+    // No modo "3 vezes", a quantidade de parcelas remanescentes é sempre 2
+    // (mais a "1ª parcela" acima, totalizando 3 pagamentos iguais).
+    function recomputeQuantidadeParcelasEllen() {
+      if (!permitirEntradaParcelada || !quantidadeParcelasEl) return;
+      if (tipoEntrada === "tresVezes") {
+        quantidadeParcelasEl.value = "2";
+      }
     }
 
     function recomputeParcela() {
@@ -159,6 +179,7 @@ export function ParcelamentoFields({
     const onDataInputs = () => recomputeDataFinal();
     const onValorTotalInput = () => {
       recomputeEntradaAutomatica();
+      recomputeQuantidadeParcelasEllen();
       recomputeParcela();
     };
     const onDataContratoInput = () => {
@@ -182,6 +203,7 @@ export function ParcelamentoFields({
         dataContratoEl.value = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, "0")}-${String(hoje.getDate()).padStart(2, "0")}`;
       }
       recomputeEntradaAutomatica();
+      recomputeQuantidadeParcelasEllen();
       recomputeDataInicialEllen();
       recomputeParcela();
       recomputeDataFinal();
@@ -238,6 +260,16 @@ export function ParcelamentoFields({
               />
               Entrada parcelada (20% + 20%)
             </label>
+            <label className="flex items-center gap-2">
+              <input
+                type="radio"
+                name="tipoEntrada"
+                value="tresVezes"
+                checked={tipoEntrada === "tresVezes"}
+                onChange={() => setTipoEntrada("tresVezes")}
+              />
+              3 vezes (sem entrada)
+            </label>
           </div>
         </div>
       )}
@@ -246,7 +278,9 @@ export function ParcelamentoFields({
           label={
             permitirEntradaParcelada && tipoEntrada === "parcelada"
               ? "Valor da 1ª parcela da entrada (R$)"
-              : "Valor de entrada (R$)"
+              : permitirEntradaParcelada && tipoEntrada === "tresVezes"
+                ? "Valor da 1ª parcela (R$)"
+                : "Valor de entrada (R$)"
           }
           name="valorEntrada"
           placeholder="R$ 0,00"
@@ -256,11 +290,23 @@ export function ParcelamentoFields({
             permitirEntradaParcelada
               ? tipoEntrada === "parcelada"
                 ? "Calculado automaticamente (20% do valor total), vence na assinatura"
-                : "Calculado automaticamente (40% do valor total), vence na assinatura"
+                : tipoEntrada === "tresVezes"
+                  ? "Calculado automaticamente (1/3 do valor total), vence na assinatura"
+                  : "Calculado automaticamente (40% do valor total), vence na assinatura"
               : undefined
           }
         />
-        <ParcelaField label="Quantidade de parcelas" name="quantidadeParcelas" required />
+        <ParcelaField
+          label="Quantidade de parcelas"
+          name="quantidadeParcelas"
+          required
+          readOnly={permitirEntradaParcelada && tipoEntrada === "tresVezes"}
+          hint={
+            permitirEntradaParcelada && tipoEntrada === "tresVezes"
+              ? "Fixo em 2 (mais a 1ª parcela = 3 pagamentos no total)"
+              : undefined
+          }
+        />
       </div>
       {permitirEntradaParcelada && tipoEntrada === "parcelada" && (
         <ParcelaField
@@ -291,7 +337,9 @@ export function ParcelamentoFields({
             permitirEntradaParcelada
               ? tipoEntrada === "parcelada"
                 ? "Calculada automaticamente (30 dias após a 2ª parcela da entrada)"
-                : "Calculada automaticamente (30 dias após a entrada)"
+                : tipoEntrada === "tresVezes"
+                  ? "Calculada automaticamente (1 mês após a assinatura)"
+                  : "Calculada automaticamente (30 dias após a entrada)"
               : "Selecione no calendário"
           }
         />

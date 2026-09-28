@@ -115,6 +115,7 @@ export default async function EditarContratoGeradoPage({
               options={[
                 { value: "unica", label: "Entrada única (40%)" },
                 { value: "parcelada", label: "Entrada parcelada (20% + 20%)" },
+                { value: "tresVezes", label: "3 vezes (sem entrada)" },
               ]}
             />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
