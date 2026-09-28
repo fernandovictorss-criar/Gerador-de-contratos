@@ -320,7 +320,11 @@ export function ParcelamentoFields({
       )}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <ParcelaField
-          label="Valor de cada parcela (R$)"
+          label={
+            permitirEntradaParcelada && tipoEntrada === "tresVezes"
+              ? "Valor da 2ª e 3ª parcela (R$)"
+              : "Valor de cada parcela (R$)"
+          }
           name="valorParcela"
           placeholder="R$ 0,00"
           required
@@ -328,7 +332,11 @@ export function ParcelamentoFields({
           hint="Calculado automaticamente"
         />
         <ParcelaField
-          label="Data da 1ª parcela"
+          label={
+            permitirEntradaParcelada && tipoEntrada === "tresVezes"
+              ? "Data da 2ª parcela"
+              : "Data da 1ª parcela"
+          }
           name="dataInicialParcelas"
           type="date"
           required
@@ -344,7 +352,11 @@ export function ParcelamentoFields({
           }
         />
         <ParcelaField
-          label="Data da última parcela"
+          label={
+            permitirEntradaParcelada && tipoEntrada === "tresVezes"
+              ? "Data da 3ª parcela (última)"
+              : "Data da última parcela"
+          }
           name="dataFinalParcelas"
           type="date"
           required
