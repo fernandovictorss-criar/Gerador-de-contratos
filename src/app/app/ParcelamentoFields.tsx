@@ -37,6 +37,9 @@ function diffDays(a: string, b: string): number {
   return Math.round((db.getTime() - da.getTime()) / 86400000);
 }
 
+const PERCENTUAIS_ENTRADA = [10, 20, 30, 40, 50, 60, 70];
+const OPCAO_ENTRADA_PADRAO = "40";
+
 export function ParcelamentoFields({
   minDiasAntesEvento = 15,
   permitirEntradaParcelada = false,
@@ -46,7 +49,12 @@ export function ParcelamentoFields({
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [aviso, setAviso] = useState<string | null>(null);
-  const [tipoEntrada, setTipoEntrada] = useState<"unica" | "parcelada" | "tresVezes">("unica");
+  // Uma única escolha: um percentual de entrada única ("10" a "70") ou um dos
+  // modos especiais ("parcelada" = 20% + 20%, "tresVezes" = sem entrada).
+  const [opcaoEntrada, setOpcaoEntrada] = useState(OPCAO_ENTRADA_PADRAO);
+  const tipoEntrada: "unica" | "parcelada" | "tresVezes" =
+    opcaoEntrada === "parcelada" || opcaoEntrada === "tresVezes" ? opcaoEntrada : "unica";
+  const percentualEntrada = tipoEntrada === "unica" ? Number(opcaoEntrada) : 0;
 
   useEffect(() => {
     const form = containerRef.current?.closest("form");
@@ -76,11 +84,12 @@ export function ParcelamentoFields({
       return e1 + e2;
     }
 
-    // Para a Ellen Regina, a entrada é 40% do valor total (única ou dividida
-    // em duas parcelas de 20%), ou — no modo "3 vezes" — não existe entrada
-    // separada: o total é dividido em 3 parcelas iguais, e a "1ª parcela"
-    // aqui representa só a primeira dessas 3. Substitui a entrada digitada
-    // livre. Sem valor total, limpa para não exibir um valor obsoleto.
+    // Para a Ellen Regina, a entrada é um percentual do valor total escolhido
+    // no seletor (10% a 70%, paga de uma vez), ou 20% + 20% em duas parcelas,
+    // ou — no modo "3 vezes" — não existe entrada separada: o total é
+    // dividido em 3 parcelas iguais, e a "1ª parcela" aqui representa só a
+    // primeira dessas 3. Substitui a entrada digitada livre. Sem valor total,
+    // limpa para não exibir um valor obsoleto.
     function recomputeEntradaAutomatica() {
       if (!permitirEntradaParcelada || !valorEntradaEl) return;
       const valorTotal = parseMoney(valorTotalEl?.value || "");
@@ -96,7 +105,7 @@ export function ParcelamentoFields({
         valorEntradaEl.value = formatMoneyInput(valorTotal / 3);
         if (valorEntrada2El) valorEntrada2El.value = "";
       } else {
-        valorEntradaEl.value = formatMoneyInput(valorTotal * 0.4);
+        valorEntradaEl.value = formatMoneyInput(valorTotal * (percentualEntrada / 100));
         if (valorEntrada2El) valorEntrada2El.value = "";
       }
     }
@@ -232,45 +241,36 @@ export function ParcelamentoFields({
       form.removeEventListener("change", onFormInput);
       form.removeEventListener(DATA_EVENTO_CHANGED, checkPrazo);
     };
-  }, [minDiasAntesEvento, permitirEntradaParcelada, tipoEntrada]);
+  }, [minDiasAntesEvento, permitirEntradaParcelada, tipoEntrada, percentualEntrada]);
 
   return (
     <div ref={containerRef} className="space-y-3">
       {permitirEntradaParcelada && (
         <div className="space-y-1">
-          <span className="text-xs font-bold text-brand-light/80 block">Forma da entrada</span>
-          <div className="flex flex-wrap gap-4 text-sm text-brand-light">
-            <label className="flex items-center gap-2">
-              <input
-                type="radio"
-                name="tipoEntrada"
-                value="unica"
-                checked={tipoEntrada === "unica"}
-                onChange={() => setTipoEntrada("unica")}
-              />
-              Entrada única (40%)
-            </label>
-            <label className="flex items-center gap-2">
-              <input
-                type="radio"
-                name="tipoEntrada"
-                value="parcelada"
-                checked={tipoEntrada === "parcelada"}
-                onChange={() => setTipoEntrada("parcelada")}
-              />
-              Entrada parcelada (20% + 20%)
-            </label>
-            <label className="flex items-center gap-2">
-              <input
-                type="radio"
-                name="tipoEntrada"
-                value="tresVezes"
-                checked={tipoEntrada === "tresVezes"}
-                onChange={() => setTipoEntrada("tresVezes")}
-              />
-              3 vezes (sem entrada)
-            </label>
-          </div>
+          <label htmlFor="opcaoEntrada" className="text-xs font-bold text-brand-light/80 block">
+            Entrada
+          </label>
+          <select
+            id="opcaoEntrada"
+            value={opcaoEntrada}
+            onChange={(e) => setOpcaoEntrada(e.target.value)}
+            className="w-full rounded-lg border border-brand-border bg-brand-navy px-3 py-2 text-brand-light text-sm focus:outline-none focus:border-brand-gold"
+          >
+            <optgroup label="Entrada única">
+              {PERCENTUAIS_ENTRADA.map((p) => (
+                <option key={p} value={String(p)}>
+                  {p}% do valor total
+                </option>
+              ))}
+            </optgroup>
+            <optgroup label="Entrada parcelada">
+              <option value="parcelada">20% + 20% (em duas parcelas)</option>
+            </optgroup>
+            <optgroup label="Sem entrada">
+              <option value="tresVezes">3 vezes (sem entrada)</option>
+            </optgroup>
+          </select>
+          <input type="hidden" name="tipoEntrada" value={tipoEntrada} />
         </div>
       )}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -292,7 +292,7 @@ export function ParcelamentoFields({
                 ? "Calculado automaticamente (20% do valor total), vence na assinatura"
                 : tipoEntrada === "tresVezes"
                   ? "Calculado automaticamente (1/3 do valor total), vence na assinatura"
-                  : "Calculado automaticamente (40% do valor total), vence na assinatura"
+                  : `Calculado automaticamente (${percentualEntrada}% do valor total), vence na assinatura`
               : undefined
           }
         />

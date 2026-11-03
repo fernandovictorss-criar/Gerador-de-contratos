@@ -113,7 +113,7 @@ export default async function EditarContratoGeradoPage({
               name="tipoEntrada"
               defaultValue={contrato.tipoEntrada}
               options={[
-                { value: "unica", label: "Entrada única (40%)" },
+                { value: "unica", label: "Entrada única" },
                 { value: "parcelada", label: "Entrada parcelada (20% + 20%)" },
                 { value: "tresVezes", label: "3 vezes (sem entrada)" },
               ]}
