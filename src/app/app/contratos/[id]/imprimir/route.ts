@@ -71,7 +71,8 @@ export async function GET(
     dados,
     modelo?.html,
     Boolean(contrato.tipoEvento),
-    contrato.identidadeContratada ?? undefined
+    contrato.identidadeContratada ?? undefined,
+    contrato.tipoEvento
   );
 
   return new NextResponse(html, {

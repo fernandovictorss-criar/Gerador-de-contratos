@@ -78,7 +78,8 @@ export async function POST(req: NextRequest) {
     dados,
     modelo?.html,
     Boolean(tipoEvento),
-    identidadeContratada ?? undefined
+    identidadeContratada ?? undefined,
+    tipoEvento
   );
 
   // Guarda um retrato do contrato para permitir listar/corrigir depois.

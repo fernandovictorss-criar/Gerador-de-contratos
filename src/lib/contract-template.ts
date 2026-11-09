@@ -362,12 +362,23 @@ body{font-family:'Montserrat',Arial,Helvetica,sans-serif;background:#F1E6DA;colo
 @media print{body{background:#fff}}
 `;
 
+// Tipos de evento cujo nome contém "corporativ" (ex: "Corporativo") têm uma
+// empresa como contratante, então usam o texto de pessoa jurídica.
+function ehEventoCorporativo(tipoEvento?: string | null): boolean {
+  return (tipoEvento ?? "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .includes("corporativ");
+}
+
 export function renderContratoPage(
   tenant: Tenant,
   dados: ContratoFormData,
   templateHtml?: string,
   usarEstiloPessoaFisica: boolean = false,
-  identidadeContratada?: TenantIdentidadeContratada
+  identidadeContratada?: TenantIdentidadeContratada,
+  tipoEvento?: string | null
 ): string {
   const clausulasHtml = renderClausulas(
     templateHtml || tenant.contratoModeloHtml || DEFAULT_CLAUSULAS_TEMPLATE,
@@ -380,9 +391,11 @@ export function renderContratoPage(
   // representante — muda conforme o CNPJ escolhido no formulário.
   const contratado = identidadeContratada ?? tenant;
 
-  const contratanteClause = usarEstiloPessoaFisica
-    ? `<p><strong>CONTRATANTE:</strong> <strong>${escapeHtml(dados.contratante) || "_________________________"}</strong>${dados.profissao ? `, ${escapeHtml(dados.profissao)}` : ""}, portador(a) do CPF/MF sob o nº <strong>${escapeHtml(dados.docContratante) || "________________"}</strong>, residente e domiciliado(a) no endereço ${escapeHtml(dados.endContratante) || "_________________________"}, Tel: ${escapeHtml(dados.telContratante) || "____________"}.</p>`
-    : `<p><strong>CONTRATANTE:</strong> <strong>${escapeHtml(dados.contratante) || "_________________________"}</strong>, CNPJ/CPF: <strong>${escapeHtml(dados.docContratante) || "________________"}</strong>, Endereço: ${escapeHtml(dados.endContratante) || "_________________________"}, Tel: ${escapeHtml(dados.telContratante) || "____________"}.</p>`;
+  const contratanteClause = ehEventoCorporativo(tipoEvento)
+    ? `<p><strong>CONTRATANTE:</strong> <strong>${escapeHtml(dados.contratante) || "_________________________"}</strong>, pessoa jurídica de direito privado, inscrita no CNPJ sob o nº <strong>${escapeHtml(dados.docContratante) || "________________"}</strong>, com sede no endereço ${escapeHtml(dados.endContratante) || "_________________________"}, Tel: ${escapeHtml(dados.telContratante) || "____________"}.</p>`
+    : usarEstiloPessoaFisica
+      ? `<p><strong>CONTRATANTE:</strong> <strong>${escapeHtml(dados.contratante) || "_________________________"}</strong>${dados.profissao ? `, ${escapeHtml(dados.profissao)}` : ""}, portador(a) do CPF/MF sob o nº <strong>${escapeHtml(dados.docContratante) || "________________"}</strong>, residente e domiciliado(a) no endereço ${escapeHtml(dados.endContratante) || "_________________________"}, Tel: ${escapeHtml(dados.telContratante) || "____________"}.</p>`
+      : `<p><strong>CONTRATANTE:</strong> <strong>${escapeHtml(dados.contratante) || "_________________________"}</strong>, CNPJ/CPF: <strong>${escapeHtml(dados.docContratante) || "________________"}</strong>, Endereço: ${escapeHtml(dados.endContratante) || "_________________________"}, Tel: ${escapeHtml(dados.telContratante) || "____________"}.</p>`;
 
   const usarMarcaEllen = tenant.cnpj === ELLEN_CNPJ;
 
