@@ -334,7 +334,7 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f2f2f3;color:#1
 .witnesses{display:grid;grid-template-columns:1fr 1fr;gap:38px;margin-top:32px}
 .small{font-size:10.5px;color:#666;text-align:center;margin-top:22px}
 @page{size:A4;margin:30mm 25mm}
-@media(max-width:860px){.paper{width:100%;min-height:0;margin:0 auto}.contract{padding:24px 18px 48px}.contract h1{font-size:16px}.signature-grid,.witnesses{grid-template-columns:1fr;gap:24px}.signature-box.solo{width:auto}}
+@media(max-width:860px){.paper{width:100%;min-height:0;margin:0 auto}.contract{padding:24px 18px 48px}.contract h1{font-size:16px}.signature-grid,.witnesses{grid-template-columns:1fr;gap:24px}.signature-box.solo{width:auto;margin:0}}
 @media print{.toolbar{display:none}body{background:#fff}.paper{box-shadow:none;width:auto;min-height:0;margin:0;border-radius:0}.contract{padding:0}.closing-block{break-inside:avoid;page-break-inside:avoid}.contract h3{break-after:avoid;page-break-after:avoid}}
 `;
 
@@ -365,7 +365,7 @@ body{font-family:'Montserrat',Arial,Helvetica,sans-serif;background:#F1E6DA;colo
 .signature-role{font-family:'Cinzel',Georgia,serif;font-weight:600;color:#2B2B2B;letter-spacing:.12em}
 .small{color:#BBA99E;font-size:10px;letter-spacing:.02em}
 .right{color:#2B2B2B}
-@media print{body{background:#fff}}
+@media print{body{background:#fff}.paper{box-shadow:none}}
 `;
 
 // Tipos de evento cujo nome contém "corporativ" (ex: "Corporativo") têm uma
