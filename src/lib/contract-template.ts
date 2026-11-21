@@ -6,6 +6,11 @@ export type ContratoFormData = {
   docContratante: string;
   telContratante: string;
   endContratante: string;
+  contratante2: string;
+  profissao2: string;
+  docContratante2: string;
+  telContratante2: string;
+  endContratante2: string;
   dataEvento: string;
   dataEventoFim: string;
   dataEventoTexto: string;
@@ -323,12 +328,13 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f2f2f3;color:#1
 .signatures{margin-top:42px}
 .signature-grid{display:grid;grid-template-columns:1fr 1fr;gap:34px 38px;align-items:start}
 .signature-box{min-height:88px;text-align:center}
+.signature-box.solo{grid-column:1/-1;width:calc(50% - 19px);margin:0 auto}
 .signature-line{border-top:1.3px solid #111;padding-top:8px;font-weight:700;line-height:1.32}
 .signature-role{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:#555;margin-top:6px;font-weight:700}
 .witnesses{display:grid;grid-template-columns:1fr 1fr;gap:38px;margin-top:32px}
 .small{font-size:10.5px;color:#666;text-align:center;margin-top:22px}
 @page{size:A4;margin:30mm 25mm}
-@media(max-width:860px){.paper{width:100%;min-height:0;margin:0 auto}.contract{padding:24px 18px 48px}.contract h1{font-size:16px}.signature-grid,.witnesses{grid-template-columns:1fr;gap:24px}}
+@media(max-width:860px){.paper{width:100%;min-height:0;margin:0 auto}.contract{padding:24px 18px 48px}.contract h1{font-size:16px}.signature-grid,.witnesses{grid-template-columns:1fr;gap:24px}.signature-box.solo{width:auto}}
 @media print{.toolbar{display:none}body{background:#fff}.paper{box-shadow:none;width:auto;min-height:0;margin:0;border-radius:0}.contract{padding:0}.closing-block{break-inside:avoid;page-break-inside:avoid}.contract h3{break-after:avoid;page-break-after:avoid}}
 `;
 
@@ -372,6 +378,18 @@ function ehEventoCorporativo(tipoEvento?: string | null): boolean {
     .includes("corporativ");
 }
 
+// Qualificação de uma pessoa física, usada quando há dois contratantes (casal).
+// Telefone em branco é omitido em vez de virar uma linha de sublinhados.
+function qualificarPessoaFisica(p: {
+  nome: string;
+  profissao: string;
+  doc: string;
+  endereco: string;
+  tel: string;
+}): string {
+  return `<strong>${escapeHtml(p.nome) || "_________________________"}</strong>${p.profissao ? `, ${escapeHtml(p.profissao)}` : ""}, portador(a) do CPF/MF sob o nº <strong>${escapeHtml(p.doc) || "________________"}</strong>, residente e domiciliado(a) no endereço ${escapeHtml(p.endereco) || "_________________________"}${p.tel ? `, Tel: ${escapeHtml(p.tel)}` : ""}`;
+}
+
 export function renderContratoPage(
   tenant: Tenant,
   dados: ContratoFormData,
@@ -391,7 +409,25 @@ export function renderContratoPage(
   // representante — muda conforme o CNPJ escolhido no formulário.
   const contratado = identidadeContratada ?? tenant;
 
-  const contratanteClause = ehEventoCorporativo(tipoEvento)
+  // Com 2º contratante (casal), os dois são qualificados como pessoa física;
+  // o endereço do 2º, se deixado em branco, é o mesmo do 1º.
+  const temSegundoContratante = Boolean(dados.contratante2);
+
+  const contratanteClause = temSegundoContratante
+    ? `<p><strong>CONTRATANTES:</strong> ${qualificarPessoaFisica({
+        nome: dados.contratante,
+        profissao: dados.profissao,
+        doc: dados.docContratante,
+        endereco: dados.endContratante,
+        tel: dados.telContratante,
+      })}; e ${qualificarPessoaFisica({
+        nome: dados.contratante2,
+        profissao: dados.profissao2,
+        doc: dados.docContratante2,
+        endereco: dados.endContratante2 || dados.endContratante,
+        tel: dados.telContratante2,
+      })}.</p>`
+    : ehEventoCorporativo(tipoEvento)
     ? `<p><strong>CONTRATANTE:</strong> <strong>${escapeHtml(dados.contratante) || "_________________________"}</strong>, pessoa jurídica de direito privado, inscrita no CNPJ sob o nº <strong>${escapeHtml(dados.docContratante) || "________________"}</strong>, com sede no endereço ${escapeHtml(dados.endContratante) || "_________________________"}, Tel: ${escapeHtml(dados.telContratante) || "____________"}.</p>`
     : usarEstiloPessoaFisica
       ? `<p><strong>CONTRATANTE:</strong> <strong>${escapeHtml(dados.contratante) || "_________________________"}</strong>${dados.profissao ? `, ${escapeHtml(dados.profissao)}` : ""}, portador(a) do CPF/MF sob o nº <strong>${escapeHtml(dados.docContratante) || "________________"}</strong>, residente e domiciliado(a) no endereço ${escapeHtml(dados.endContratante) || "_________________________"}, Tel: ${escapeHtml(dados.telContratante) || "____________"}.</p>`
@@ -421,6 +457,22 @@ export function renderContratoPage(
     ? `p/ ${escapeHtml(contratado.nome)}<br>CNPJ ${escapeHtml(contratado.cnpj)}`
     : `p/ ${escapeHtml(contratado.nome)}<br>${escapeHtml(contratado.representante)}<br>${escapeHtml(contratado.cpfRepresentante)} ${escapeHtml(contratado.rgRepresentante)}`;
 
+  const caixaContratado = `<div class="signature-box${temSegundoContratante ? " solo" : ""}">
+        <div class="signature-line">${assinaturaContratado}</div>
+        <div class="signature-role">Contratado</div>
+      </div>`;
+  const caixaContratante = (nome: string, doc: string) => `<div class="signature-box">
+        <div class="signature-line">${escapeHtml(nome) || "CONTRATANTE"}<br>CPF/CNPJ nº ${escapeHtml(doc) || "________________"}</div>
+        <div class="signature-role">Contratante</div>
+      </div>`;
+  const caixasAssinatura = temSegundoContratante
+    ? [
+        caixaContratante(dados.contratante, dados.docContratante),
+        caixaContratante(dados.contratante2, dados.docContratante2),
+        caixaContratado,
+      ].join("\n      ")
+    : [caixaContratado, caixaContratante(dados.contratante, dados.docContratante)].join("\n      ");
+
   const body = `${logoHtml}<h1>${titulo}</h1>
 <p><strong>IDENTIFICAÇÃO DAS PARTES CONTRATANTES</strong></p>
 ${contratanteClause}
@@ -430,14 +482,7 @@ ${clausulasHtml}
   <p class="right"><strong>${escapeHtml(dados.cidadeAss) || "_______/__"}, ${formatLongDate(dados.dataContrato)}.</strong></p>
   <div class="signatures">
     <div class="signature-grid">
-      <div class="signature-box">
-        <div class="signature-line">${assinaturaContratado}</div>
-        <div class="signature-role">Contratado</div>
-      </div>
-      <div class="signature-box">
-        <div class="signature-line">${escapeHtml(dados.contratante) || "CONTRATANTE"}<br>CPF/CNPJ nº ${escapeHtml(dados.docContratante) || "________________"}</div>
-        <div class="signature-role">Contratante</div>
-      </div>
+      ${caixasAssinatura}
     </div>
     <div class="witnesses">
       <div class="signature-box">

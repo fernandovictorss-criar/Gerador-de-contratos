@@ -80,6 +80,16 @@ export default async function EditarContratoGeradoPage({
             <EditField label="Endereço completo" name="endContratante" defaultValue={contrato.endContratante} textarea />
           </Group>
 
+          <Group title="2º contratante (casal) — deixe o nome em branco se não houver">
+            <EditField label="Nome completo" name="contratante2" defaultValue={contrato.contratante2} />
+            <EditField label="Profissão" name="profissao2" defaultValue={contrato.profissao2} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <EditField label="CPF" name="docContratante2" defaultValue={contrato.docContratante2} />
+              <EditField label="Telefone" name="telContratante2" defaultValue={contrato.telContratante2} />
+            </div>
+            <EditField label="Endereço completo (em branco = mesmo do 1º contratante)" name="endContratante2" defaultValue={contrato.endContratante2} textarea />
+          </Group>
+
           <Group title="Evento">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <EditField label="Data" name="dataEvento" type="date" defaultValue={contrato.dataEvento} />

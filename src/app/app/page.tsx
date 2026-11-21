@@ -7,6 +7,7 @@ import { LogoutButton } from "./LogoutButton";
 import { DataEventoField } from "./DataEventoField";
 import { DuracaoFields } from "./DuracaoFields";
 import { ParcelamentoFields } from "./ParcelamentoFields";
+import { SegundoContratanteFields } from "./SegundoContratanteFields";
 import { ELLEN_CNPJ } from "@/lib/contract-template";
 
 const SERVICOS_ASSESSORIA = [
@@ -169,6 +170,7 @@ export default async function FormPage() {
               <Field label="Telefone" name="telContratante" />
             </div>
             <Field label="Endereço completo" name="endContratante" textarea required />
+            {tenant?.cnpj === ELLEN_CNPJ && <SegundoContratanteFields />}
           </Section>
 
           <Section id="sec-evento" title="Dados do Evento">
